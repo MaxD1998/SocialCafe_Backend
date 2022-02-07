@@ -6,7 +6,7 @@ This is a simple project of social networking site that will increase my program
 I would like create alternative from Facebook and other big social networking sites.
 All solutions in my project are available for all programmers
 
-### Used technolgies
+### Technolgies:
 * SignalR
 * MediatR
 * JSON Web Tokens
