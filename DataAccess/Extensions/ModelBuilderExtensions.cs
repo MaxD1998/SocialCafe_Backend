@@ -7,13 +7,6 @@ namespace DataAccess.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void SetRefreshToken(this ModelBuilder builder)
-        {
-            builder.SetProperty<RefreshToken>(x => x.CreationDate, requiered: true);
-            builder.SetProperty<RefreshToken>(x => x.ExpireDate, requiered: true);
-            builder.SetProperty<RefreshToken>(x => x.Token, requiered: true);
-        }
-
         public static void SetUser(this ModelBuilder builder)
         {
             builder.SetProperty<User>(x => x.Email, 50, true);
