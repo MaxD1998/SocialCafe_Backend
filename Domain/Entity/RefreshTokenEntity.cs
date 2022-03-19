@@ -5,7 +5,7 @@ using System.Net;
 namespace Domain.Entity
 {
     [Owned]
-    public class RefreshToken
+    public class RefreshTokenEntity
     {
         [Required]
         public DateTime CreationDate { get; set; }
@@ -17,6 +17,6 @@ namespace Domain.Entity
         public IPAddress RemoteAddress { get; set; }
 
         [Required]
-        public string Token { get; set; }
+        public Guid Token { get; set; }
     }
 }

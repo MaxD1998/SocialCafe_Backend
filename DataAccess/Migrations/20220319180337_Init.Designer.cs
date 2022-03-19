@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220213101536_Init")]
+    [Migration("20220319180337_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,11 +24,12 @@ namespace DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Domain.Entity.User", b =>
+            modelBuilder.Entity("Domain.Entity.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
@@ -44,10 +45,15 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasColumnOrder(1);
 
-                    b.Property<string>("HashPassword")
+                    b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasColumnOrder(4);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -57,14 +63,17 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Entity.User", b =>
+            modelBuilder.Entity("Domain.Entity.UserEntity", b =>
                 {
-                    b.OwnsMany("Domain.Entity.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Domain.Entity.RefreshTokenEntity", "RefreshTokens", b1 =>
                         {
-                            b1.Property<int>("UserId")
+                            b1.Property<int>("UserEntityId")
                                 .HasColumnType("int");
 
                             b1.Property<int>("Id")
@@ -83,16 +92,15 @@ namespace DataAccess.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(45)");
 
-                            b1.Property<string>("Token")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<Guid>("Token")
+                                .HasColumnType("uniqueidentifier");
 
-                            b1.HasKey("UserId", "Id");
+                            b1.HasKey("UserEntityId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshTokenEntity");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("UserEntityId");
                         });
 
                     b.Navigation("RefreshTokens");
