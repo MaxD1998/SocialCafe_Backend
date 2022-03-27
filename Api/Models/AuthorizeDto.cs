@@ -5,7 +5,7 @@ namespace Api.Models
     public class AuthorizeDto
     {
         [JsonIgnore]
-        public string RefreshToken { get; set; }
+        public Guid RefreshToken { get; set; }
 
         public string Token { get; set; }
 

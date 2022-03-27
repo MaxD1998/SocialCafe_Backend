@@ -1,5 +1,7 @@
-﻿using Domain.Entity;
+﻿using DataAccess;
+using Domain.Entity;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cqrs.Api.RefreshToken.Create
 {
@@ -7,7 +9,17 @@ namespace Cqrs.Api.RefreshToken.Create
     {
         public async Task<RefreshTokenEntity> Handle(CreateRefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var context = new DataContext())
+            {
+                var user = await context.Users
+                    .FirstOrDefaultAsync(x => x.Id.Equals(request.UserId));
+
+                user.RefreshTokens.Add(request.Entity);
+                await context.SaveChangesAsync();
+
+                return user.RefreshTokens
+                    .LastOrDefault();
+            }
         }
     }
 }

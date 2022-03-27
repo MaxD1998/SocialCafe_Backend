@@ -1,6 +1,6 @@
-﻿namespace Api.Constants
+﻿namespace Common.Constants
 {
-    public sealed class CookieNameConstant
+    public sealed class CookieNameConst
     {
         public const string RefreshToken = "RefreshToken";
     }

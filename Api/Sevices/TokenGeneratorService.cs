@@ -42,11 +42,9 @@ namespace Api.Sevices
             return getToken;
         }
 
-        public string GenerateRefreshToken()
+        public Guid GenerateRefreshToken()
         {
-            var guid = Guid.NewGuid();
-
-            return guid.ToString();
+            return Guid.NewGuid();
         }
     }
 }

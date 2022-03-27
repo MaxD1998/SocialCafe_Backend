@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Base;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 
 namespace Domain.Entity
 {
     [Owned]
-    public class RefreshTokenEntity
+    [Table("RefreshToken")]
+    public class RefreshTokenEntity : BaseEntity
     {
         [Required]
         public DateTime CreationDate { get; set; }

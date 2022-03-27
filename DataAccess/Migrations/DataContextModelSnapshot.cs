@@ -64,19 +64,17 @@ namespace DataAccess.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Domain.Entity.UserEntity", b =>
                 {
                     b.OwnsMany("Domain.Entity.RefreshTokenEntity", "RefreshTokens", b1 =>
                         {
-                            b1.Property<int>("UserEntityId")
-                                .HasColumnType("int");
-
                             b1.Property<int>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnOrder(0);
 
                             SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"), 1L, 1);
 
@@ -93,9 +91,14 @@ namespace DataAccess.Migrations
                             b1.Property<Guid>("Token")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.HasKey("UserEntityId", "Id");
+                            b1.Property<int>("UserEntityId")
+                                .HasColumnType("int");
 
-                            b1.ToTable("RefreshTokenEntity");
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("UserEntityId");
+
+                            b1.ToTable("RefreshToken");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserEntityId");

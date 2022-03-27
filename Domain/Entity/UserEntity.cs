@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entity
 {
     [Index(nameof(Email), IsUnique = true)]
+    [Table("User")]
     public class UserEntity : BaseEntity
     {
         [Column(Order = 3)]

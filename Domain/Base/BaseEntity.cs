@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Base
 {
     public abstract class BaseEntity
     {
         [Column(Order = 0)]
-        public int Id { get; init; }
+        [Key]
+        public int Id { get; private init; }
     }
 }

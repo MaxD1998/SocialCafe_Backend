@@ -1,5 +1,4 @@
 ﻿using Api.Models;
-using System.Net;
 
 namespace Api.Interfaces
 {
@@ -7,6 +6,6 @@ namespace Api.Interfaces
     {
         Task<AuthorizeDto> GetAuthorization(LoginDto loginDto);
 
-        Task<AuthorizeDto> GetAuthorization(Guid refreshToken, IPAddress ipAddress);
+        Task<AuthorizeDto> GetAuthorization(Guid refreshToken);
     }
 }

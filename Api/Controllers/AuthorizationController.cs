@@ -1,8 +1,7 @@
-﻿using Api.Constants;
-using Api.Controllers.Common;
+﻿using Api.Common;
 using Api.Interfaces;
 using Api.Models;
-using MediatR;
+using Common.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,16 +12,12 @@ namespace Api.Controllers
     {
         public AuthorizationController(IAuthenticationService authorizationService,
             ICookieService cookieService,
-            IMediator mediator,
             ISettings settings)
         {
             AuthorizationService = authorizationService;
             CookieService = cookieService;
-            Mediator = mediator;
             Settings = settings;
         }
-
-        public IMediator Mediator { get; }
 
         private IAuthenticationService AuthorizationService { get; }
 
@@ -30,23 +25,30 @@ namespace Api.Controllers
 
         private ISettings Settings { get; }
 
+        [HttpPost("refreshtoken")]
+        public async Task<ActionResult> GetToken()
+        {
+            var refreshToken = CookieService.GetCookie(CookieNameConst.RefreshToken);
+
+            if (Guid.TryParse(refreshToken, out var guid))
+            {
+                var result = await AuthorizationService.GetAuthorization(guid);
+
+                return Ok(result);
+            }
+
+            throw new Exception(ExceptionMessageConst.WrongRefreshTokenFormat);
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult> Login(LoginDto dto)
         {
             var result = await AuthorizationService.GetAuthorization(dto);
             var expireDays = Settings.GetRefreshTokenExpireDays();
 
-            CookieService.AddCookie(CookieNameConstant.RefreshToken, result.RefreshToken, expireDays);
+            CookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays);
 
             return Ok(result);
-        }
-
-        [HttpPost("refreshtoken")]
-        public async Task<ActionResult> Login()
-        {
-            //return Ok(await Mediator.Send(new GetUserByEmailQuery("mamich1998@gmail.com")));
-            var x = AppDomain.CurrentDomain.GetAssemblies();
-            return Ok(x.Where(x => x.FullName.Contains("null")).Select(x => x.FullName));
         }
     }
 }

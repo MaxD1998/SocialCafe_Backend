@@ -6,6 +6,6 @@ namespace Api.Interfaces
     {
         string GenerateJwt(UserEntity user);
 
-        string GenerateRefreshToken();
+        Guid GenerateRefreshToken();
     }
 }

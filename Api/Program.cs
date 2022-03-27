@@ -4,6 +4,7 @@ using Api.Models;
 using Api.Settings;
 using Api.Sevices;
 using Common.Middlewares;
+using Cqrs;
 using DataAccess;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +21,7 @@ service.AddSingleton<ISettings>(settings);
 service.AddHttpContextAccessor();
 service.AddControllers();
 service.AddDbContext<DataContext>();
-service.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+service.AddMediatR(typeof(CqrsAssembly));
 service.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 service.AddJwtAuthentication(settings);
 

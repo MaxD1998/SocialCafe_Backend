@@ -10,7 +10,7 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "User",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -23,35 +23,40 @@ namespace DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshTokenEntity",
+                name: "RefreshToken",
                 columns: table => new
                 {
-                    UserEntityId = table.Column<int>(type: "int", nullable: false),
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     RemoteAddress = table.Column<string>(type: "nvarchar(45)", nullable: false),
-                    Token = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    Token = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserEntityId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshTokenEntity", x => new { x.UserEntityId, x.Id });
+                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RefreshTokenEntity_Users_UserEntityId",
+                        name: "FK_RefreshToken_User_UserEntityId",
                         column: x => x.UserEntityId,
-                        principalTable: "Users",
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_Email",
-                table: "Users",
+                name: "IX_RefreshToken_UserEntityId",
+                table: "RefreshToken",
+                column: "UserEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
                 column: "Email",
                 unique: true);
         }
@@ -59,10 +64,10 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RefreshTokenEntity");
+                name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "User");
         }
     }
 }
