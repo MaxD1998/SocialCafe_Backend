@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Base;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 
 namespace Domain.Entity
 {
     [Owned]
-    public class RefreshToken
+    [Table("RefreshToken")]
+    public class RefreshTokenEntity : BaseEntity
     {
         [Required]
         public DateTime CreationDate { get; set; }
@@ -17,6 +20,6 @@ namespace Domain.Entity
         public IPAddress RemoteAddress { get; set; }
 
         [Required]
-        public string Token { get; set; }
+        public Guid Token { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace DataAccess
 {
     public class DataContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

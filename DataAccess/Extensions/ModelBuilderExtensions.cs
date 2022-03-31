@@ -9,10 +9,15 @@ namespace DataAccess.Extensions
     {
         public static void SetUser(this ModelBuilder builder)
         {
-            builder.SetProperty<User>(x => x.Email, 50, true);
-            builder.SetProperty<User>(x => x.FirstName, 50, true);
-            builder.SetProperty<User>(x => x.LastName, 50, true);
-            builder.SetProperty<User>(x => x.HashPassword, requiered: true);
+            builder.SetProperty<UserEntity>(x => x.Email, 50, true);
+            builder.SetProperty<UserEntity>(x => x.FirstName, 50, true);
+            builder.SetProperty<UserEntity>(x => x.LastName, 50, true);
+            builder.SetProperty<UserEntity>(x => x.HashedPassword, requiered: true);
+            builder.SetProperty<UserEntity>(x => x.IsDeleted, requiered: true)
+                .HasDefaultValue(false);
+
+            builder.Entity<UserEntity>()
+                .HasQueryFilter(x => x.IsDeleted == false);
         }
 
         private static PropertyBuilder SetProperty<T>(this ModelBuilder modelBuilder,

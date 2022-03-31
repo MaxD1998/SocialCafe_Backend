@@ -1,7 +1,12 @@
-﻿namespace Domain.Base
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Base
 {
     public abstract class BaseEntity
     {
-        public int Id { get; set; }
+        [Column(Order = 0)]
+        [Key]
+        public int Id { get; private init; }
     }
 }
