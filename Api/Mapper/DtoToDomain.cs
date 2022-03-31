@@ -1,5 +1,6 @@
 ﻿using Api.Models;
 using AutoMapper;
+using Domain.Entity;
 
 namespace Api.Mapper
 {
@@ -7,7 +8,7 @@ namespace Api.Mapper
     {
         public DtoToDomain()
         {
-            CreateMap<RegisterDto, DtoToDomain>();
+            CreateMap<RegisterDto, UserEntity>();
         }
     }
 }

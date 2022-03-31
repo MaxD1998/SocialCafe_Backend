@@ -82,7 +82,7 @@ namespace Api.Sevices
 
         private async Task<Guid> AddOrUpdateRefreshTokenAsync(UserEntity entity)
         {
-            var refreshToken = entity.RefreshTokens
+            var refreshToken = entity.RefreshTokens?
                 .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp));
 
             var newRefreshToken = new RefreshTokenEntity()
@@ -120,7 +120,7 @@ namespace Api.Sevices
 
         private async Task<Guid> GetRefreshTokenAsync(UserEntity entity)
         {
-            var refreshToken = entity.RefreshTokens
+            var refreshToken = entity.RefreshTokens?
                 .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp)
                     && x.ExpireDate >= DateTime.UtcNow);
 
