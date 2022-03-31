@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Api.Models;
+using AutoMapper;
 
 namespace Api.Mapper
 {
@@ -6,6 +7,7 @@ namespace Api.Mapper
     {
         public DtoToDomain()
         {
+            CreateMap<RegisterDto, DtoToDomain>();
         }
     }
 }

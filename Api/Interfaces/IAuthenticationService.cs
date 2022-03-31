@@ -1,11 +1,14 @@
 ﻿using Api.Models;
+using Domain.Entity;
 
 namespace Api.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<AuthorizeDto> GetAuthorization(LoginDto loginDto);
+        Task<AuthorizeDto> GetAuthorizationAsync(LoginDto loginDto);
 
-        Task<AuthorizeDto> GetAuthorization(Guid refreshToken);
+        Task<AuthorizeDto> GetAuthorizationAsync(UserEntity entity, string password);
+
+        Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken);
     }
 }

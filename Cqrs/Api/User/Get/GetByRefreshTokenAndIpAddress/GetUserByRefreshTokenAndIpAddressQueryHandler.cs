@@ -12,8 +12,7 @@ namespace Cqrs.Api.User.Get.GetByRefreshTokenAndIpAddress
             using (var context = new DataContext())
             {
                 return await context.Users
-                    .FirstOrDefaultAsync(x =>
-                        x.RefreshTokens
+                    .FirstOrDefaultAsync(x => x.RefreshTokens
                             .Any(x => x.Token.Equals(request.RefreshToken)
                                 && x.RemoteAddress.Equals(request.IpAddress)));
             }

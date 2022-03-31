@@ -20,7 +20,7 @@ namespace Api.Sevices
         public AuthenticationService(IHttpContextAccessor accessor,
             IMapper mapper,
             IMediator mediator,
-            IPasswordHasher<LoginDto> passwordHasher,
+            IPasswordHasher<UserEntity> passwordHasher,
             ISettings settings,
             ITokenGeneratorService tokenGeneratorService)
         {
@@ -38,7 +38,7 @@ namespace Api.Sevices
 
         private IMediator Mediator { get; }
 
-        private IPasswordHasher<LoginDto> PasswordHasher { get; }
+        private IPasswordHasher<UserEntity> PasswordHasher { get; }
 
         private ISettings Settings { get; }
 
@@ -46,23 +46,28 @@ namespace Api.Sevices
 
         private IPAddress UserRemoteIp => Accessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4();
 
-        public async Task<AuthorizeDto> GetAuthorization(LoginDto dto)
+        public async Task<AuthorizeDto> GetAuthorizationAsync(LoginDto dto)
         {
             var user = await Mediator.Send(new GetUserByEmailQuery(dto.Email));
 
-            CheckLoginData(user, dto);
+            return await GetAuthorizationAsync(user, dto.Password);
+        }
 
-            var refreshToken = await GetRefreshToken(user);
+        public async Task<AuthorizeDto> GetAuthorizationAsync(UserEntity entity, string password)
+        {
+            CheckLoginData(entity, password);
+
+            var refreshToken = await GetRefreshTokenAsync(entity);
 
             return new AuthorizeDto()
             {
-                Username = $"{user.FirstName} {user.LastName}",
-                Token = TokenGeneratorService.GenerateJwt(user),
+                Username = $"{entity.FirstName} {entity.LastName}",
+                Token = TokenGeneratorService.GenerateJwt(entity),
                 RefreshToken = refreshToken
             };
         }
 
-        public async Task<AuthorizeDto> GetAuthorization(Guid refreshToken)
+        public async Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken)
         {
             var user = await Mediator.Send(new GetUserByRefreshTokenAndIpAddressQuery(refreshToken, UserRemoteIp));
 
@@ -75,7 +80,7 @@ namespace Api.Sevices
             };
         }
 
-        private async Task<Guid> AddOrUpdateRefreshToken(UserEntity entity)
+        private async Task<Guid> AddOrUpdateRefreshTokenAsync(UserEntity entity)
         {
             var refreshToken = entity.RefreshTokens
                 .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp));
@@ -100,12 +105,12 @@ namespace Api.Sevices
             return updatedRefreshToken.Token;
         }
 
-        private void CheckLoginData(UserEntity entity, LoginDto dto)
+        private void CheckLoginData(UserEntity entity, string password)
         {
             entity.ThrowIfNull(new UnauthorizeException(ExceptionMessageConst.WrongEmailOrPassword));
 
-            var user = Mapper.Map<LoginDto>(entity);
-            var passwordVerfication = PasswordHasher.VerifyHashedPassword(user, user?.Password, dto.Password);
+            var user = Mapper.Map<UserEntity>(entity);
+            var passwordVerfication = PasswordHasher.VerifyHashedPassword(entity, entity?.HashedPassword, password);
 
             if (passwordVerfication == PasswordVerificationResult.Failed)
             {
@@ -113,7 +118,7 @@ namespace Api.Sevices
             }
         }
 
-        private async Task<Guid> GetRefreshToken(UserEntity entity)
+        private async Task<Guid> GetRefreshTokenAsync(UserEntity entity)
         {
             var refreshToken = entity.RefreshTokens
                 .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp)
@@ -121,7 +126,7 @@ namespace Api.Sevices
 
             if (refreshToken is null)
             {
-                return await AddOrUpdateRefreshToken(entity);
+                return await AddOrUpdateRefreshTokenAsync(entity);
             }
 
             return refreshToken.Token;

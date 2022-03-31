@@ -1,11 +1,11 @@
 using Api.Extensions;
 using Api.Interfaces;
-using Api.Models;
 using Api.Settings;
 using Api.Sevices;
 using Common.Middlewares;
 using Cqrs;
 using DataAccess;
+using Domain.Entity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +29,7 @@ service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
-service.AddScoped<IPasswordHasher<LoginDto>, PasswordHasher<LoginDto>>();
+service.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
 
 var app = builder.Build();
 
