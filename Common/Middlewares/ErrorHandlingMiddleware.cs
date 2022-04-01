@@ -11,6 +11,11 @@ namespace Common.Middlewares
             {
                 await next.Invoke(context);
             }
+            catch (BadRequestException ex)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 context.Response.StatusCode = 404;

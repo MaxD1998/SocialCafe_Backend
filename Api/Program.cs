@@ -6,6 +6,8 @@ using Common.Middlewares;
 using Cqrs;
 using DataAccess;
 using Domain.Entity;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,8 @@ service.AddSingleton<ISettings>(settings);
 
 service.AddHttpContextAccessor();
 service.AddControllers();
+service.AddFluentValidation();
+service.AddValidatorsFromAssembly(typeof(Program).Assembly);
 service.AddDbContext<DataContext>();
 service.AddMediatR(typeof(CqrsAssembly));
 service.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
