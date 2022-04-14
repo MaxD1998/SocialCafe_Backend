@@ -1,9 +1,10 @@
-﻿using Api.Common;
-using Api.Interfaces;
-using Api.Models;
+﻿using Api.Bases;
+using ApplicationCore.Cqrs.User.Create;
+using ApplicationCore.Dtos;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using Common.Constants;
-using Cqrs.Api.User.Create;
+using Common.Interfaces;
 using Domain.Entity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
