@@ -43,8 +43,8 @@ namespace Api.Controllers
 
         private ISettings Settings { get; }
 
-        [HttpPost("refreshtoken")]
-        public async Task<ActionResult> GetToken()
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> GetToken()
         {
             var refreshToken = CookieService.GetCookie(CookieNameConst.RefreshToken);
 
@@ -59,7 +59,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<ActionResult> Login(LoginDto dto)
+        public async Task<IActionResult> Login(LoginDto dto)
         {
             var result = await AuthorizationService.GetAuthorizationAsync(dto);
             var expireDays = Settings.GetRefreshTokenExpireDays();
@@ -70,7 +70,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<ActionResult> Register(RegisterDto registerDto)
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
             var dto = Mapper.Map<UserDto>(registerDto);
 

@@ -23,8 +23,8 @@ var settings = builder.Configuration.Get<Settings>();
 
 service.AddSingleton<ISettings>(settings);
 
-service.AddHttpContextAccessor();
 service.AddControllers();
+service.AddHttpContextAccessor();
 service.AddFluentValidation();
 service.AddValidatorsFromAssembly(typeof(Program).Assembly);
 service.AddDbContext<DataContext>();
@@ -39,9 +39,18 @@ service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 service.AddScoped<IUnitOfWork, UnitOfWork>();
 
+service.AddEndpointsApiExplorer();
+service.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
