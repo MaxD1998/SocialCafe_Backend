@@ -1,18 +1,18 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
 
 namespace ApplicationCore.Bases
 {
     public abstract class BaseRequestHandler
     {
-        public BaseRequestHandler(IBaseRepository baseRepository, IMapper mapper)
+        public BaseRequestHandler(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            BaseRepository = baseRepository;
             Mapper = mapper;
+            UnitOfWork = unitOfWork;
         }
 
-        protected IBaseRepository BaseRepository { get; }
-
         protected IMapper Mapper { get; }
+
+        protected IUnitOfWork UnitOfWork { get; }
     }
 }

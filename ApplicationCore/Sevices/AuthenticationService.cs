@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Cqrs.RefreshToken.Create;
 using ApplicationCore.Cqrs.RefreshToken.Update;
-using ApplicationCore.Cqrs.User.Get.GetByEmail;
-using ApplicationCore.Cqrs.User.Get.GetByRefreshTokenAndIpAddress;
+using ApplicationCore.Cqrs.User.Get;
 using ApplicationCore.Dtos;
 using ApplicationCore.Exceptions;
 using ApplicationCore.Interfaces;

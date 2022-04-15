@@ -3,12 +3,14 @@ using Api.Middlewares;
 using ApplicationCore;
 using ApplicationCore.Dtos;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Interfaces.Repositories;
 using ApplicationCore.Sevices;
 using Common.Interfaces;
 using Common.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
+using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +35,9 @@ service.AddJwtAuthentication(settings);
 service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
-service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
+service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
+service.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces.Repositories;
 using Domain.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAll<T>() where T : BaseEntity
+        public async Task<IEnumerable<T>> GetAllAsync<T>() where T : BaseEntity
         {
             using (var context = new DataContext())
             {
@@ -28,7 +28,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<T> GetElement<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
             using (var context = new DataContext())
             {
@@ -37,7 +37,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetElements<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
             using (var context = new DataContext())
             {

@@ -1,4 +1,6 @@
-﻿namespace ApplicationCore.Dtos.Validators
+﻿using FluentValidation;
+
+namespace ApplicationCore.Dtos.Validators
 {
     public class LoginDtoValidator : AbstractValidator<RegisterDto>
     {

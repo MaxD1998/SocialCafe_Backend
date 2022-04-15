@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Bases;
 using Domain.Entity;
+using System.Text.Json.Serialization;
 
 namespace ApplicationCore.Dtos
 {
@@ -15,6 +16,7 @@ namespace ApplicationCore.Dtos
 
         public string LastName { get; set; }
 
+        [JsonIgnore]
         public List<RefreshTokenEntity> RefreshTokens { get; set; }
     }
 }
