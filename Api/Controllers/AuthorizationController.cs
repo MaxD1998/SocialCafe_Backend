@@ -1,10 +1,10 @@
-﻿using Api.Common;
-using Api.Interfaces;
-using Api.Models;
+﻿using Api.Bases;
+using ApplicationCore.Cqrs.User.Create;
+using ApplicationCore.Dtos;
+using ApplicationCore.Interfaces;
 using AutoMapper;
 using Common.Constants;
-using Cqrs.Api.User.Create;
-using Domain.Entity;
+using Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,7 +20,7 @@ namespace Api.Controllers
             ICookieService cookieService,
             IMapper mapper,
             IMediator mediator,
-            IPasswordHasher<UserEntity> passwordHasher,
+            IPasswordHasher<UserDto> passwordHasher,
             ISettings settings)
         {
             AuthorizationService = authorizationService;
@@ -39,12 +39,12 @@ namespace Api.Controllers
 
         private IMediator Mediator { get; }
 
-        private IPasswordHasher<UserEntity> PasswordHasher { get; }
+        private IPasswordHasher<UserDto> PasswordHasher { get; }
 
         private ISettings Settings { get; }
 
-        [HttpPost("refreshtoken")]
-        public async Task<ActionResult> GetToken()
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> GetToken()
         {
             var refreshToken = CookieService.GetCookie(CookieNameConst.RefreshToken);
 
@@ -58,8 +58,8 @@ namespace Api.Controllers
             throw new Exception(ExceptionMessageConst.WrongRefreshTokenFormat);
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginDto dto)
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login(LoginDto dto)
         {
             var result = await AuthorizationService.GetAuthorizationAsync(dto);
             var expireDays = Settings.GetRefreshTokenExpireDays();
@@ -69,15 +69,15 @@ namespace Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterDto dto)
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(RegisterDto registerDto)
         {
-            var entity = Mapper.Map<UserEntity>(dto);
+            var dto = Mapper.Map<UserDto>(registerDto);
 
-            entity.HashedPassword = PasswordHasher.HashPassword(entity, dto.Password);
+            dto.HashedPassword = PasswordHasher.HashPassword(dto, registerDto.Password);
 
-            var user = await Mediator.Send(new CreateUserCommand(entity));
-            var result = await AuthorizationService.GetAuthorizationAsync(user, dto.Password);
+            var user = await Mediator.Send(new CreateUserCommand(dto));
+            var result = await AuthorizationService.GetAuthorizationAsync(user, registerDto.Password);
             var expireDays = Settings.GetRefreshTokenExpireDays();
 
             CookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays);

@@ -1,43 +1,56 @@
 using Api.Extensions;
-using Api.Interfaces;
-using Api.Settings;
-using Api.Sevices;
-using Common.Middlewares;
-using Cqrs;
-using DataAccess;
-using Domain.Entity;
+using Api.Middlewares;
+using ApplicationCore;
+using ApplicationCore.Dtos;
+using ApplicationCore.Interfaces;
+using ApplicationCore.Interfaces.Repositories;
+using ApplicationCore.Sevices;
+using Common.Interfaces;
+using Common.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure;
+using Infrastructure.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var service = builder.Services;
-var settings = builder.Configuration.Get<MainSettings>();
+var settings = builder.Configuration.Get<Settings>();
 
 // Add services to the container.
 
 service.AddSingleton<ISettings>(settings);
 
-service.AddHttpContextAccessor();
 service.AddControllers();
+service.AddHttpContextAccessor();
 service.AddFluentValidation();
 service.AddValidatorsFromAssembly(typeof(Program).Assembly);
 service.AddDbContext<DataContext>();
-service.AddMediatR(typeof(CqrsAssembly));
-service.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+service.AddMediatR(typeof(ApplicationCoreAssembly).Assembly);
+service.AddAutoMapper(typeof(ApplicationCoreAssembly).Assembly);
 service.AddJwtAuthentication(settings);
 
 service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
+service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
-service.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+service.AddScoped<IUnitOfWork, UnitOfWork>();
+
+service.AddEndpointsApiExplorer();
+service.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
