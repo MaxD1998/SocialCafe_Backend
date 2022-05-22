@@ -4,6 +4,6 @@
     {
         public IBaseRepository BaseRepository { get; }
 
-        public IRefreshTokenRepository RefreshTokenRepository { get; }
+        public IUserRepository UserRepository { get; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Bases;
-using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.User;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entity;
@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.User.Create
 {
-    public record CreateUserCommand(UserDto Dto) : IRequest<UserDto>;
+    public record CreateUserCommand(UserInputDto Dto) : IRequest<UserDto>;
 
     public class CreateUserCommandHandler : BaseRequestHandler, IRequestHandler<CreateUserCommand, UserDto>
     {
@@ -17,11 +17,7 @@ namespace ApplicationCore.Cqrs.User.Create
 
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var entity = Mapper.Map<UserEntity>(request.Dto);
-            var result = await UnitOfWork.BaseRepository
-                .CreateAsync(entity);
-
-            return Mapper.Map<UserDto>(result);
+            return await CreateAsync<UserEntity, UserDto>(request.Dto);
         }
     }
 }

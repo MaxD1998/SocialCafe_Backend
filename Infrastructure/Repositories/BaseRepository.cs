@@ -1,11 +1,15 @@
-﻿using ApplicationCore.Interfaces.Repositories;
+﻿using ApplicationCore.Exceptions;
+using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces.Repositories;
+using ApplicationCore.Resources;
 using Domain.Base;
+using Infrastructure.Bases;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
 {
-    public class BaseRepository : IBaseRepository
+    public class BaseRepository : BaseRepositoryMapper, IBaseRepository
     {
         public async Task<T> CreateAsync<T>(T entity) where T : BaseEntity
         {
@@ -13,9 +17,24 @@ namespace Infrastructure.Repositories
             {
                 var result = await context.Set<T>()
                     .AddAsync(entity);
+
                 await context.SaveChangesAsync();
 
-                return result.Entity;
+                return await context.Set<T>()
+                    .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
+            }
+        }
+
+        public async Task<IEnumerable<T>> CreateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                await context.Set<T>()
+                    .AddRangeAsync(entities);
+
+                await context.SaveChangesAsync();
+
+                return entities;
             }
         }
 
@@ -24,6 +43,7 @@ namespace Infrastructure.Repositories
             using (var context = new DataContext())
             {
                 return await context.Set<T>()
+                    .AsNoTracking()
                     .ToListAsync();
             }
         }
@@ -44,6 +64,53 @@ namespace Infrastructure.Repositories
                 return await context.Set<T>()
                     .Where(expression)
                     .ToListAsync();
+            }
+        }
+
+        public async Task<T> UpdateAsync<T>(int id, T entity) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                var record = await context.Set<T>()
+                    .FindAsync(id);
+
+                record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
+                Map(entity, record);
+
+                var result = context.Set<T>()
+                    .Update(record);
+
+                await context.SaveChangesAsync();
+
+                return await context.Set<T>()
+                    .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
+            }
+        }
+
+        public async Task<IEnumerable<T>> UpdateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                var ids = entities.Select(x => x.Id)
+                    .ToList();
+                var records = await context.Set<T>()
+                    .Where(x => ids.Contains(x.Id))
+                    .ToListAsync();
+
+                records.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));
+
+                foreach (var record in records)
+                {
+                    var entity = entities.FirstOrDefault(x => x.Id.Equals(record.Id));
+                    Map(entity, record);
+                }
+
+                context.Set<T>()
+                    .UpdateRange(records);
+
+                await context.SaveChangesAsync();
+
+                return entities;
             }
         }
     }

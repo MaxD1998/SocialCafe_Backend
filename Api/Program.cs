@@ -1,12 +1,12 @@
 using Api.Extensions;
 using Api.Middlewares;
 using ApplicationCore;
-using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.User;
+using ApplicationCore.Helpers;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Interfaces.Repositories;
+using ApplicationCore.Settings;
 using ApplicationCore.Sevices;
-using Common.Interfaces;
-using Common.Settings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure;
@@ -17,7 +17,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var service = builder.Services;
-var settings = builder.Configuration.Get<Settings>();
+var config = ConfigHelper.SetConfings();
+var settings = config.Get<Settings>();
 
 // Add services to the container.
 

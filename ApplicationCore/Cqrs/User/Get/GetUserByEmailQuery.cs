@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Bases;
-using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.User;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entity;
@@ -17,10 +17,7 @@ namespace ApplicationCore.Cqrs.User.Get
 
         public async Task<UserDto> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
         {
-            var result = await UnitOfWork.BaseRepository
-                .GetElementAsync<UserEntity>(x => x.Email.Equals(request.Email));
-
-            return Mapper.Map<UserDto>(result);
+            return await GetElementAsync<UserEntity, UserDto>(x => x.Email.Equals(request.Email));
         }
     }
 }

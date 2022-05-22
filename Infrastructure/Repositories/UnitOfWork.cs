@@ -6,6 +6,6 @@ namespace Infrastructure.Repositories
     {
         public IBaseRepository BaseRepository => new BaseRepository();
 
-        public IRefreshTokenRepository RefreshTokenRepository => new RefreshTokenRepository();
+        public IUserRepository UserRepository => new UserRepository();
     }
 }

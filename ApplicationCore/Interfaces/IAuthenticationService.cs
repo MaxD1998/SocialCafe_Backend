@@ -1,4 +1,6 @@
 ﻿using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.Login;
+using ApplicationCore.Dtos.User;
 
 namespace ApplicationCore.Interfaces
 {

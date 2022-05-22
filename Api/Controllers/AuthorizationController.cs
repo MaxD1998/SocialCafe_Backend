@@ -1,10 +1,11 @@
 ﻿using Api.Bases;
+using ApplicationCore.Constants;
 using ApplicationCore.Cqrs.User.Create;
-using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.Login;
+using ApplicationCore.Dtos.User;
 using ApplicationCore.Interfaces;
+using ApplicationCore.Resources;
 using AutoMapper;
-using Common.Constants;
-using Common.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,12 +22,11 @@ namespace Api.Controllers
             IMapper mapper,
             IMediator mediator,
             IPasswordHasher<UserDto> passwordHasher,
-            ISettings settings)
+            ISettings settings) : base(mediator)
         {
             AuthorizationService = authorizationService;
             CookieService = cookieService;
             Mapper = mapper;
-            Mediator = mediator;
             PasswordHasher = passwordHasher;
             Settings = settings;
         }
@@ -36,8 +36,6 @@ namespace Api.Controllers
         private ICookieService CookieService { get; }
 
         private IMapper Mapper { get; }
-
-        private IMediator Mediator { get; }
 
         private IPasswordHasher<UserDto> PasswordHasher { get; }
 
@@ -55,7 +53,7 @@ namespace Api.Controllers
                 return Ok(result);
             }
 
-            throw new Exception(ExceptionMessageConst.WrongRefreshTokenFormat);
+            throw new Exception(ErrorMessages.WrongRefreshTokenFormat);
         }
 
         [HttpPost("Login")]

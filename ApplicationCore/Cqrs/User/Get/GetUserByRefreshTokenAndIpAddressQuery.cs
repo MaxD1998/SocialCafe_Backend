@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Bases;
-using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.User;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Entity;
@@ -18,12 +18,9 @@ namespace ApplicationCore.Cqrs.User.Get
 
         public async Task<UserDto> Handle(GetUserByRefreshTokenAndIpAddressQuery request, CancellationToken cancellationToken)
         {
-            var result = await UnitOfWork.BaseRepository
-                .GetElementAsync<UserEntity>(x => x.RefreshTokens
+            return await GetElementAsync<UserEntity, UserDto>(x => x.RefreshTokens
                     .Any(x => x.Token.Equals(request.RefreshToken)
                         && x.RemoteAddress.Equals(request.IpAddress)));
-
-            return Mapper.Map<UserDto>(result);
         }
     }
 }

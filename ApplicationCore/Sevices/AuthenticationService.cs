@@ -1,14 +1,14 @@
-﻿using ApplicationCore.Cqrs.RefreshToken.Create;
-using ApplicationCore.Cqrs.RefreshToken.Update;
+﻿using ApplicationCore.Cqrs.User.Create;
 using ApplicationCore.Cqrs.User.Get;
+using ApplicationCore.Cqrs.User.Update;
 using ApplicationCore.Dtos;
+using ApplicationCore.Dtos.Login;
+using ApplicationCore.Dtos.RefreshToken;
+using ApplicationCore.Dtos.User;
 using ApplicationCore.Exceptions;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
-using AutoMapper;
-using Common.Constants;
-using Common.Extensions;
-using Common.Interfaces;
-using Domain.Entity;
+using ApplicationCore.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,7 +19,6 @@ namespace ApplicationCore.Sevices
     public class AuthenticationService : IAuthenticationService
     {
         public AuthenticationService(IHttpContextAccessor accessor,
-            IMapper mapper,
             IMediator mediator,
             IPasswordHasher<UserDto> passwordHasher,
             ISettings settings,
@@ -27,15 +26,12 @@ namespace ApplicationCore.Sevices
         {
             Accessor = accessor;
             Mediator = mediator;
-            Mapper = mapper;
             PasswordHasher = passwordHasher;
             Settings = settings;
             TokenGeneratorService = tokenGeneratorService;
         }
 
         private IHttpContextAccessor Accessor { get; }
-
-        private IMapper Mapper { get; }
 
         private IMediator Mediator { get; }
 
@@ -72,7 +68,7 @@ namespace ApplicationCore.Sevices
         {
             var user = await Mediator.Send(new GetUserByRefreshTokenAndIpAddressQuery(refreshToken, UserRemoteIp));
 
-            user.ThrowIfNull(new UnauthorizeException(ExceptionMessageConst.SessionWasExpired));
+            user.ThrowIfNull(new UnauthorizeException(ErrorMessages.SessionWasExpired));
 
             return new AuthorizeDto()
             {
@@ -86,7 +82,7 @@ namespace ApplicationCore.Sevices
             var refreshToken = dto.RefreshTokens?
                 .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp));
 
-            var newRefreshToken = new RefreshTokenEntity()
+            var newRefreshToken = new RefreshTokenInputDto()
             {
                 CreationDate = DateTime.UtcNow,
                 ExpireDate = DateTime.UtcNow.AddDays(Settings.GetRefreshTokenExpireDays()),
@@ -96,25 +92,27 @@ namespace ApplicationCore.Sevices
 
             if (refreshToken is null)
             {
-                var createdRefreshToken = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
+                var createUserResponse = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
+                var createdRefreshToken = createUserResponse.RefreshTokens
+                    .LastOrDefault();
 
                 return createdRefreshToken.Token;
             }
 
-            var updatedRefreshToken = await Mediator.Send(new UpdateRefreshTokenCommand(dto.Id, newRefreshToken));
+            await Mediator.Send(new UpdateRefreshTokenCommand(dto.Id, refreshToken.Id, newRefreshToken));
 
-            return updatedRefreshToken.Token;
+            return newRefreshToken.Token;
         }
 
         private void CheckLoginData(UserDto dto, string password)
         {
-            dto.ThrowIfNull(new UnauthorizeException(ExceptionMessageConst.WrongEmailOrPassword));
+            dto.ThrowIfNull(new UnauthorizeException(ErrorMessages.WrongEmailOrPassword));
 
             var passwordVerfication = PasswordHasher.VerifyHashedPassword(dto, dto?.HashedPassword, password);
 
             if (passwordVerfication == PasswordVerificationResult.Failed)
             {
-                throw new UnauthorizeException(ExceptionMessageConst.WrongEmailOrPassword);
+                throw new UnauthorizeException(ErrorMessages.WrongEmailOrPassword);
             }
         }
 

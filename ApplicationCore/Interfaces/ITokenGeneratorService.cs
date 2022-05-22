@@ -1,4 +1,4 @@
-﻿using ApplicationCore.Dtos;
+﻿using ApplicationCore.Dtos.User;
 
 namespace ApplicationCore.Interfaces
 {
