@@ -1,6 +1,7 @@
 ﻿using Api.Bases;
 using ApplicationCore.Constants;
 using ApplicationCore.Cqrs.User.Create;
+using ApplicationCore.Dtos;
 using ApplicationCore.Dtos.Login;
 using ApplicationCore.Dtos.User;
 using ApplicationCore.Interfaces;
@@ -42,7 +43,7 @@ namespace Api.Controllers
         private ISettings Settings { get; }
 
         [HttpPost("RefreshToken")]
-        public async Task<IActionResult> GetToken()
+        public async Task<ActionResult<AuthorizeDto>> GetToken()
         {
             var refreshToken = CookieService.GetCookie(CookieNameConst.RefreshToken);
 
@@ -57,7 +58,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(LoginDto dto)
+        public async Task<ActionResult<AuthorizeDto>> Login(LoginDto dto)
         {
             var result = await AuthorizationService.GetAuthorizationAsync(dto);
             var expireDays = Settings.GetRefreshTokenExpireDays();
@@ -68,7 +69,7 @@ namespace Api.Controllers
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        public async Task<ActionResult<AuthorizeDto>> Register(RegisterDto registerDto)
         {
             var dto = Mapper.Map<UserDto>(registerDto);
 

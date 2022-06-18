@@ -15,7 +15,6 @@ namespace Infrastructure.Configurations
                 {
                     prop.SetProperty(x => x.CreationDate, requiered: true);
                     prop.SetProperty(x => x.ExpireDate, requiered: true);
-                    prop.SetProperty(x => x.RemoteAddress, requiered: true);
                     prop.SetProperty(x => x.Token, requiered: true);
                 });
             builder.SetProperty(x => x.Email, 50, true);
@@ -25,8 +24,8 @@ namespace Infrastructure.Configurations
             builder.SetProperty(x => x.IsDeleted, requiered: true)
                 .HasDefaultValue(false);
             builder.HasQueryFilter(x => x.IsDeleted == false);
-
-            builder.Navigation(x => x.RefreshTokens);
+            builder.HasIndex(x => x.Email)
+                .IsUnique();
         }
     }
 }

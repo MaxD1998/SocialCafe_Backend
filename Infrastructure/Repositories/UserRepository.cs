@@ -18,30 +18,28 @@ namespace Infrastructure.Repositories
                     .FirstOrDefaultAsync(x => x.Id.Equals(userId));
 
                 user.ThrowIfNull(new NotFoundException(string.Format(ErrorMessages.ValueXWasNull, nameof(user).ToFirstUpper())));
-
                 user.RefreshTokens.Add(entity);
                 await context.SaveChangesAsync();
 
-                return user;
+                return await context.Set<UserEntity>()
+                    .FirstOrDefaultAsync(x => x.Id.Equals(userId));
             }
         }
 
-        public async Task<UserEntity> UpdateRefreshTokenAsync(int userId, int refereshTokenId, RefreshTokenEntity entity)
+        public async Task<bool> DeleteRefreshTokensAsync(int userId, IEnumerable<RefreshTokenEntity> entities)
         {
             using (var context = new DataContext())
             {
                 var user = await context.Set<UserEntity>()
-                    .FindAsync(userId);
+                    .FirstOrDefaultAsync(x => x.Id.Equals(userId));
+
                 user.ThrowIfNull(new NotFoundException(string.Format(ErrorMessages.ValueXWasNull, nameof(user).ToFirstUpper())));
 
-                var refreshToken = user.RefreshTokens
-                    .FirstOrDefault(x => x.Id.Equals(refereshTokenId));
-                refreshToken.ThrowIfNull(new NotFoundException(string.Format(ErrorMessages.ValueXWasNull, nameof(refreshToken).ToFirstUpper())));
+                var removedItemsCount = user.RefreshTokens.RemoveAll(x => entities.Select(x => x.Id).Contains(x.Id));
 
-                Map(entity, refreshToken);
                 await context.SaveChangesAsync();
 
-                return user;
+                return removedItemsCount > 0;
             }
         }
     }

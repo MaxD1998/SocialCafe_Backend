@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Cqrs.User.Create;
+using ApplicationCore.Cqrs.User.Delete;
 using ApplicationCore.Cqrs.User.Get;
-using ApplicationCore.Cqrs.User.Update;
 using ApplicationCore.Dtos;
 using ApplicationCore.Dtos.Login;
 using ApplicationCore.Dtos.RefreshToken;
@@ -10,28 +10,22 @@ using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Resources;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System.Net;
 
 namespace ApplicationCore.Sevices
 {
     public class AuthenticationService : IAuthenticationService
     {
-        public AuthenticationService(IHttpContextAccessor accessor,
-            IMediator mediator,
+        public AuthenticationService(IMediator mediator,
             IPasswordHasher<UserDto> passwordHasher,
             ISettings settings,
             ITokenGeneratorService tokenGeneratorService)
         {
-            Accessor = accessor;
             Mediator = mediator;
             PasswordHasher = passwordHasher;
             Settings = settings;
             TokenGeneratorService = tokenGeneratorService;
         }
-
-        private IHttpContextAccessor Accessor { get; }
 
         private IMediator Mediator { get; }
 
@@ -40,8 +34,6 @@ namespace ApplicationCore.Sevices
         private ISettings Settings { get; }
 
         private ITokenGeneratorService TokenGeneratorService { get; }
-
-        private IPAddress UserRemoteIp => Accessor.HttpContext.Connection.RemoteIpAddress.MapToIPv4();
 
         public async Task<AuthorizeDto> GetAuthorizationAsync(LoginDto dto)
         {
@@ -66,7 +58,7 @@ namespace ApplicationCore.Sevices
 
         public async Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken)
         {
-            var user = await Mediator.Send(new GetUserByRefreshTokenAndIpAddressQuery(refreshToken, UserRemoteIp));
+            var user = await Mediator.Send(new GetUserByRefreshTokenQuery(refreshToken));
 
             user.ThrowIfNull(new UnauthorizeException(ErrorMessages.SessionWasExpired));
 
@@ -77,31 +69,20 @@ namespace ApplicationCore.Sevices
             };
         }
 
-        private async Task<Guid> AddOrUpdateRefreshTokenAsync(UserDto dto)
+        private async Task<Guid> AddRefreshTokenAsync(UserDto dto)
         {
-            var refreshToken = dto.RefreshTokens?
-                .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp));
-
             var newRefreshToken = new RefreshTokenInputDto()
             {
                 CreationDate = DateTime.UtcNow,
                 ExpireDate = DateTime.UtcNow.AddDays(Settings.GetRefreshTokenExpireDays()),
-                RemoteAddress = UserRemoteIp,
                 Token = TokenGeneratorService.GenerateRefreshToken(),
             };
 
-            if (refreshToken is null)
-            {
-                var createUserResponse = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
-                var createdRefreshToken = createUserResponse.RefreshTokens
-                    .LastOrDefault();
+            var createUserResponse = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
+            var createdRefreshToken = createUserResponse.RefreshTokens
+                .LastOrDefault();
 
-                return createdRefreshToken.Token;
-            }
-
-            await Mediator.Send(new UpdateRefreshTokenCommand(dto.Id, refreshToken.Id, newRefreshToken));
-
-            return newRefreshToken.Token;
+            return createdRefreshToken.Token;
         }
 
         private void CheckLoginData(UserDto dto, string password)
@@ -116,18 +97,19 @@ namespace ApplicationCore.Sevices
             }
         }
 
+        private async Task<bool> DeleteOldRefreshTokens(UserDto dto)
+        {
+            var oldRefreshTokens = dto.RefreshTokens
+                .Where(x => x.ExpireDate < DateTime.UtcNow)
+                .ToList();
+
+            return await Mediator.Send(new DeleteRefreshTokensCommand(dto.Id, oldRefreshTokens));
+        }
+
         private async Task<Guid> GetRefreshTokenAsync(UserDto dto)
         {
-            var refreshToken = dto.RefreshTokens?
-                .FirstOrDefault(x => x.RemoteAddress.Equals(UserRemoteIp)
-                    && x.ExpireDate >= DateTime.UtcNow);
-
-            if (refreshToken is null)
-            {
-                return await AddOrUpdateRefreshTokenAsync(dto);
-            }
-
-            return refreshToken.Token;
+            await DeleteOldRefreshTokens(dto);
+            return await AddRefreshTokenAsync(dto);
         }
     }
 }

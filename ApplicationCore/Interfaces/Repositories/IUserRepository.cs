@@ -6,6 +6,6 @@ namespace ApplicationCore.Interfaces.Repositories
     {
         Task<UserEntity> CreateRefreshTokenAsync(int userId, RefreshTokenEntity entity);
 
-        Task<UserEntity> UpdateRefreshTokenAsync(int userId, int refreshTokenId, RefreshTokenEntity entity);
+        Task<bool> DeleteRefreshTokensAsync(int userId, IEnumerable<RefreshTokenEntity> entities);
     }
 }
