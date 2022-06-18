@@ -27,7 +27,7 @@ service.AddSingleton<ISettings>(settings);
 service.AddControllers();
 service.AddHttpContextAccessor();
 service.AddFluentValidation();
-service.AddValidatorsFromAssembly(typeof(Program).Assembly);
+service.AddValidatorsFromAssembly(typeof(ApplicationCoreAssembly).Assembly);
 service.AddDbContext<DataContext>();
 service.AddMediatR(typeof(ApplicationCoreAssembly).Assembly);
 service.AddAutoMapper(typeof(ApplicationCoreAssembly).Assembly);
@@ -65,9 +65,9 @@ app.UseCors(x => x
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseAuthorization();
-
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {

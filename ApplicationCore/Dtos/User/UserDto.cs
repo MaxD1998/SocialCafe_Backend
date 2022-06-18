@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Dtos.RefreshToken;
+﻿using ApplicationCore.Dtos.Post;
+using ApplicationCore.Dtos.RefreshToken;
 using System.Text.Json.Serialization;
 
 namespace ApplicationCore.Dtos.User

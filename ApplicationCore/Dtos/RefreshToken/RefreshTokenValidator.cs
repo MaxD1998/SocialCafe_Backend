@@ -10,8 +10,6 @@ namespace ApplicationCore.Dtos.RefreshToken
                 .NotEmpty();
             RuleFor(x => x.ExpireDate)
                 .NotEmpty();
-            RuleFor(x => x.RemoteAddress)
-                .NotEmpty();
             RuleFor(x => x.Token)
                 .NotEmpty();
         }

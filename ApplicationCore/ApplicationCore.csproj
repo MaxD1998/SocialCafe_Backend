@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Validators\" />
+    <Folder Include="Cqrs\Post\Update\" />
   </ItemGroup>
 
   <ItemGroup>

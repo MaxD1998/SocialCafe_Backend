@@ -1,13 +1,13 @@
 ﻿using Domain.Base;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
-    [Index(nameof(Email), IsUnique = true)]
     [Table("User")]
     public class UserEntity : BaseEntity
     {
+        public List<CommentEntity> Comments { get; set; }
+
         [Column(Order = 3)]
         public string Email { get; set; }
 
@@ -21,6 +21,8 @@ namespace Domain.Entity
 
         [Column(Order = 2)]
         public string LastName { get; set; }
+
+        public List<PostEntity> Posts { get; set; }
 
         public List<RefreshTokenEntity> RefreshTokens { get; set; }
     }
