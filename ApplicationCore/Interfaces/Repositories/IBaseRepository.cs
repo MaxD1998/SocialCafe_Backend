@@ -5,6 +5,8 @@ namespace ApplicationCore.Interfaces.Repositories
 {
     public interface IBaseRepository
     {
+        Task<bool> CheckRecordExist<T>(Expression<Func<T, bool>> expression) where T : BaseEntity;
+
         Task<T> CreateAsync<T>(T entity) where T : BaseEntity;
 
         Task<IEnumerable<T>> CreateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity;

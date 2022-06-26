@@ -6,9 +6,11 @@ namespace ApplicationCore.Dtos.Comment.Validators
     {
         public BaseCommentValidator()
         {
-            RuleFor(x => x.UserId)
-                .NotEmpty();
             RuleFor(x => x.PostId)
+                .NotEmpty();
+            RuleFor(x => x.Text)
+                .NotEmpty();
+            RuleFor(x => x.UserId)
                 .NotEmpty();
         }
     }

@@ -11,6 +11,15 @@ namespace Infrastructure.Repositories
 {
     public class BaseRepository : BaseRepositoryMapper, IBaseRepository
     {
+        public async Task<bool> CheckRecordExist<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                return await context.Set<T>()
+                    .AnyAsync(expression);
+            }
+        }
+
         public async Task<T> CreateAsync<T>(T entity) where T : BaseEntity
         {
             using (var context = new DataContext())
@@ -88,7 +97,8 @@ namespace Infrastructure.Repositories
             using (var context = new DataContext())
             {
                 var record = await context.Set<T>()
-                    .FindAsync(id);
+                    .IgnoreAutoIncludes()
+                    .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
                 record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
                 Map(entity, record);
@@ -99,6 +109,7 @@ namespace Infrastructure.Repositories
                 await context.SaveChangesAsync();
 
                 return await context.Set<T>()
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
             }
         }
@@ -107,9 +118,9 @@ namespace Infrastructure.Repositories
         {
             using (var context = new DataContext())
             {
-                var ids = entities.Select(x => x.Id)
-                    .ToList();
+                var ids = entities.Select(x => x.Id);
                 var records = await context.Set<T>()
+                    .IgnoreAutoIncludes()
                     .Where(x => ids.Contains(x.Id))
                     .ToListAsync();
 

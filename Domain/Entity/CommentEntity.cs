@@ -6,12 +6,6 @@ namespace Domain.Entity
     [Table("Comment")]
     public class CommentEntity : BaseEntity
     {
-        public List<CommentEntity> Childrens { get; set; }
-
-        public CommentEntity Parent { get; set; }
-
-        public int? ParentId { get; set; }
-
         public PostEntity Post { get; set; }
 
         public int PostId { get; set; }

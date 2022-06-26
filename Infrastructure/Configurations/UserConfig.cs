@@ -21,9 +21,7 @@ namespace Infrastructure.Configurations
             builder.SetProperty(x => x.FirstName, 50, true);
             builder.SetProperty(x => x.LastName, 50, true);
             builder.SetProperty(x => x.HashedPassword, requiered: true);
-            builder.SetProperty(x => x.IsDeleted, requiered: true)
-                .HasDefaultValue(false);
-            builder.HasQueryFilter(x => x.IsDeleted == false);
+
             builder.HasIndex(x => x.Email)
                 .IsUnique();
         }

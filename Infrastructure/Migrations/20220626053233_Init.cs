@@ -18,12 +18,37 @@ namespace Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
+                    HashedPassword = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FriendEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InviterId = table.Column<int>(type: "int", nullable: false),
+                    RecipientId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FriendEntity", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FriendEntity_User_InviterId",
+                        column: x => x.InviterId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FriendEntity_User_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,7 +99,6 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ParentId = table.Column<int>(type: "int", nullable: true),
                     PostId = table.Column<int>(type: "int", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: true)
@@ -82,11 +106,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comment", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comment_Comment_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Comment",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comment_Post_PostId",
                         column: x => x.PostId,
@@ -97,13 +116,9 @@ namespace Infrastructure.Migrations
                         name: "FK_Comment_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comment_ParentId",
-                table: "Comment",
-                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_PostId",
@@ -114,6 +129,17 @@ namespace Infrastructure.Migrations
                 name: "IX_Comment_UserId",
                 table: "Comment",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendEntity_InviterId_RecipientId",
+                table: "FriendEntity",
+                columns: new[] { "InviterId", "RecipientId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FriendEntity_RecipientId",
+                table: "FriendEntity",
+                column: "RecipientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",
@@ -136,6 +162,9 @@ namespace Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Comment");
+
+            migrationBuilder.DropTable(
+                name: "FriendEntity");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");

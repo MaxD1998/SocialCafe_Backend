@@ -19,6 +19,7 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new CommentConfig());
+            builder.ApplyConfiguration(new FriendConfig());
             builder.ApplyConfiguration(new PostConfig());
             builder.ApplyConfiguration(new UserConfig());
         }

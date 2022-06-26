@@ -11,6 +11,11 @@ namespace Infrastructure.Configurations
         {
             builder.SetProperty(x => x.Text, requiered: true);
 
+            builder.HasOne(x => x.User)
+                .WithMany(x => x.Comments)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.Navigation(x => x.User)
                 .AutoInclude();
         }
