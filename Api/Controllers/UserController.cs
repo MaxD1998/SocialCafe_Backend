@@ -27,5 +27,13 @@ namespace Api.Controllers
 
             return Ok(results);
         }
+
+        [HttpGet("ByFirstNameAndLastName")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByFirstNameAndLastNameAsync([FromQuery] string firstName, [FromQuery] string lastName)
+        {
+            var results = await Mediator.Send(new GetUsersByFirstNameAndLastNameQuery(firstName, lastName));
+
+            return Ok(results);
+        }
     }
 }
