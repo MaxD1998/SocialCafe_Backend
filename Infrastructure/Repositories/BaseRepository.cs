@@ -11,6 +11,15 @@ namespace Infrastructure.Repositories
 {
     public class BaseRepository : BaseRepositoryMapper, IBaseRepository
     {
+        public async Task<bool> CheckRecordExist<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                return await context.Set<T>()
+                    .AnyAsync(expression);
+            }
+        }
+
         public async Task<T> CreateAsync<T>(T entity) where T : BaseEntity
         {
             using (var context = new DataContext())
@@ -38,32 +47,48 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>() where T : BaseEntity
+        public async Task<IEnumerable<T>> GetAllAsync<T>(bool disableAutoInclude = false) where T : BaseEntity
         {
             using (var context = new DataContext())
             {
-                return await context.Set<T>()
+                var query = context.Set<T>()
+                    .AsNoTracking();
+
+                if (disableAutoInclude)
+                    query = query.IgnoreAutoIncludes();
+
+                return await query.ToListAsync();
+            }
+        }
+
+        public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> expression,
+            bool disableAutoInclude = false) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                var query = context.Set<T>()
+                    .AsNoTracking();
+
+                if (disableAutoInclude)
+                    query = query.IgnoreAutoIncludes();
+
+                return await query.FirstOrDefaultAsync(expression);
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression,
+            bool disableAutoInclude = false) where T : BaseEntity
+        {
+            using (var context = new DataContext())
+            {
+                var query = context.Set<T>()
                     .AsNoTracking()
-                    .ToListAsync();
-            }
-        }
+                    .Where(expression);
 
-        public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
-        {
-            using (var context = new DataContext())
-            {
-                return await context.Set<T>()
-                    .FirstOrDefaultAsync(expression);
-            }
-        }
+                if (disableAutoInclude)
+                    query = query.IgnoreAutoIncludes();
 
-        public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
-        {
-            using (var context = new DataContext())
-            {
-                return await context.Set<T>()
-                    .Where(expression)
-                    .ToListAsync();
+                return await query.ToListAsync();
             }
         }
 
@@ -72,7 +97,8 @@ namespace Infrastructure.Repositories
             using (var context = new DataContext())
             {
                 var record = await context.Set<T>()
-                    .FindAsync(id);
+                    .IgnoreAutoIncludes()
+                    .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
                 record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
                 Map(entity, record);
@@ -83,6 +109,7 @@ namespace Infrastructure.Repositories
                 await context.SaveChangesAsync();
 
                 return await context.Set<T>()
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
             }
         }
@@ -91,9 +118,9 @@ namespace Infrastructure.Repositories
         {
             using (var context = new DataContext())
             {
-                var ids = entities.Select(x => x.Id)
-                    .ToList();
+                var ids = entities.Select(x => x.Id);
                 var records = await context.Set<T>()
+                    .IgnoreAutoIncludes()
                     .Where(x => ids.Contains(x.Id))
                     .ToListAsync();
 

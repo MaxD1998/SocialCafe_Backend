@@ -35,26 +35,26 @@ namespace ApplicationCore.Bases
             return Mapper.Map<IEnumerable<TResult>>(results);
         }
 
-        protected async Task<IEnumerable<TResult>> GetAllAsync<TEntity, TResult>() where TEntity : BaseEntity
+        protected async Task<IEnumerable<TResult>> GetAllAsync<TEntity, TResult>(bool disableAutoInclude = false) where TEntity : BaseEntity
         {
             var results = await UnitOfWork.BaseRepository
-                .GetAllAsync<TEntity>();
+                .GetAllAsync<TEntity>(disableAutoInclude);
 
             return Mapper.Map<IEnumerable<TResult>>(results);
         }
 
-        protected async Task<TResult> GetElementAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity
+        protected async Task<TResult> GetElementAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression, bool disableAutoInclude = false) where TEntity : BaseEntity
         {
             var result = await UnitOfWork.BaseRepository
-                .GetElementAsync(expression);
+                .GetElementAsync(expression, disableAutoInclude);
 
             return Mapper.Map<TResult>(result);
         }
 
-        protected async Task<IEnumerable<TResult>> GetElementsAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity
+        protected async Task<IEnumerable<TResult>> GetElementsAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression, bool disableAutoInclude = false) where TEntity : BaseEntity
         {
             var result = await UnitOfWork.BaseRepository
-                .GetElementsAsync(expression);
+                .GetElementsAsync(expression, disableAutoInclude);
 
             return Mapper.Map<IEnumerable<TResult>>(result);
         }

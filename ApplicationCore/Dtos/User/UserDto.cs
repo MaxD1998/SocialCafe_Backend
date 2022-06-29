@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Dtos.Post;
-using ApplicationCore.Dtos.RefreshToken;
+﻿using ApplicationCore.Dtos.RefreshToken;
 using System.Text.Json.Serialization;
 
 namespace ApplicationCore.Dtos.User
@@ -10,8 +9,6 @@ namespace ApplicationCore.Dtos.User
         public string HashedPassword { get; set; }
 
         public int Id { get; set; }
-
-        public bool IsDeleted { get; set; }
 
         [JsonIgnore]
         public List<RefreshTokenDto> RefreshTokens { get; set; }

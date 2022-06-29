@@ -31,9 +31,6 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
@@ -46,13 +43,36 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
-
                     b.HasIndex("PostId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Comment");
+                });
+
+            modelBuilder.Entity("Domain.Entity.FriendEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("InviterId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RecipientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RecipientId");
+
+                    b.HasIndex("InviterId", "RecipientId")
+                        .IsUnique();
+
+                    b.ToTable("FriendEntity");
                 });
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
@@ -104,11 +124,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnOrder(4);
 
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -125,10 +140,6 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.CommentEntity", b =>
                 {
-                    b.HasOne("Domain.Entity.CommentEntity", "Parent")
-                        .WithMany("Childrens")
-                        .HasForeignKey("ParentId");
-
                     b.HasOne("Domain.Entity.PostEntity", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
@@ -137,13 +148,31 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.Entity.UserEntity", "User")
                         .WithMany("Comments")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Parent");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Post");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entity.FriendEntity", b =>
+                {
+                    b.HasOne("Domain.Entity.UserEntity", "Inviter")
+                        .WithMany()
+                        .HasForeignKey("InviterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.UserEntity", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inviter");
+
+                    b.Navigation("Recipient");
                 });
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
@@ -191,11 +220,6 @@ namespace Infrastructure.Migrations
                         });
 
                     b.Navigation("RefreshTokens");
-                });
-
-            modelBuilder.Entity("Domain.Entity.CommentEntity", b =>
-                {
-                    b.Navigation("Childrens");
                 });
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>

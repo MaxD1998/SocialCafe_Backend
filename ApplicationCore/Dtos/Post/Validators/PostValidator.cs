@@ -2,8 +2,5 @@
 {
     public class PostValidator : BasePostValidator<PostInputDto>
     {
-        public PostValidator()
-        {
-        }
     }
 }

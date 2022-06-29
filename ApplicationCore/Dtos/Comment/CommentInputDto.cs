@@ -2,8 +2,6 @@
 {
     public class CommentInputDto
     {
-        public int? ParentId { get; set; }
-
         public int PostId { get; set; }
 
         public string Text { get; set; }

@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Dtos.Comment;
+using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Dtos.Login;
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Dtos.RefreshToken;
@@ -14,6 +15,8 @@ namespace ApplicationCore.Mappings
         {
             CreateMap<CommentDto, CommentEntity>().ReverseMap();
             CreateMap<CommentInputDto, CommentEntity>().ReverseMap();
+            CreateMap<FriendDto, FriendEntity>().ReverseMap();
+            CreateMap<FriendInputDto, FriendEntity>().ReverseMap();
             CreateMap<PostDto, PostEntity>().ReverseMap();
             CreateMap<PostInputDto, PostEntity>().ReverseMap();
             CreateMap<RefreshTokenDto, RefreshTokenEntity>().ReverseMap();
