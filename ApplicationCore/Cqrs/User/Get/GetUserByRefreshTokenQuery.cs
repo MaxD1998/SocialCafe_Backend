@@ -16,9 +16,7 @@ namespace ApplicationCore.Cqrs.User.Get
         }
 
         public async Task<UserDto> Handle(GetUserByRefreshTokenQuery request, CancellationToken cancellationToken)
-        {
-            return await GetElementAsync<UserEntity, UserDto>(x => x.RefreshTokens
-                    .Any(x => x.Token.Equals(request.RefreshToken)));
-        }
+            => await GetElementAsync<UserEntity, UserDto>(x => x.RefreshTokens
+                .Any(x => x.Token.Equals(request.RefreshToken)));
     }
 }

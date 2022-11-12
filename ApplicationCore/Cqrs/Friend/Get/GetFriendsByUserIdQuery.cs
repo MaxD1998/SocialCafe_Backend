@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Friend.Get
         }
 
         public async Task<IEnumerable<FriendDto>> Handle(GetFriendsByUserIdQuery request, CancellationToken cancellationToken)
-        {
-            return await GetElementsAsync<FriendEntity, FriendDto>(x => x.InviterId == request.UserId || x.RecipientId == request.UserId);
-        }
+            => await GetElementsAsync<FriendEntity, FriendDto>(x => x.InviterId == request.UserId || x.RecipientId == request.UserId);
     }
 }

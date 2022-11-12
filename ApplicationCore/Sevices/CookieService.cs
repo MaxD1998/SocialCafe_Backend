@@ -17,7 +17,9 @@ namespace ApplicationCore.Sevices
             var cookie = new CookieOptions()
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(expire)
+                Expires = DateTime.UtcNow.AddDays(expire),
+                SameSite = SameSiteMode.None,
+                Secure = true,
             };
 
             Accessor.HttpContext.Response.Cookies.Append(name, value, cookie);

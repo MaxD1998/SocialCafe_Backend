@@ -35,6 +35,9 @@ namespace ApplicationCore.Bases
             return Mapper.Map<IEnumerable<TResult>>(results);
         }
 
+        protected async Task<bool> DeleteAsync<TEntity>(int id) where TEntity : BaseEntity
+            => await UnitOfWork.BaseRepository.DeleteAsync<TEntity>(id);
+
         protected async Task<IEnumerable<TResult>> GetAllAsync<TEntity, TResult>(bool disableAutoInclude = false) where TEntity : BaseEntity
         {
             var results = await UnitOfWork.BaseRepository

@@ -6,12 +6,17 @@ namespace Domain.Entity
     [Table("Post")]
     public class PostEntity : BaseEntity
     {
-        public List<CommentEntity> Comments { get; set; }
-
         public string Text { get; set; }
+
+        [Column(Order = 1)]
+        public int UserId { get; set; }
+
+        #region Related data
+
+        public ICollection<CommentEntity> Comments { get; set; }
 
         public UserEntity User { get; set; }
 
-        public int UserId { get; set; }
+        #endregion Related data
     }
 }

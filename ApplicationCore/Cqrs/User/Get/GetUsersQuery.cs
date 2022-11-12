@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.User.Get
         }
 
         public async Task<IEnumerable<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
-        {
-            return await GetAllAsync<UserEntity, UserDto>();
-        }
+            => await GetAllAsync<UserEntity, UserDto>();
     }
 }

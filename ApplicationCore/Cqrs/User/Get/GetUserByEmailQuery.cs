@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.User.Get
         }
 
         public async Task<UserDto> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
-        {
-            return await GetElementAsync<UserEntity, UserDto>(x => x.Email.ToLower() == request.Email.ToLower());
-        }
+            => await GetElementAsync<UserEntity, UserDto>(x => x.Email.ToLower() == request.Email.ToLower());
     }
 }

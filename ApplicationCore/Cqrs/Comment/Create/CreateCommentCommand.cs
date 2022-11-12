@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Comment.Create
         }
 
         public async Task<CommentDto> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
-        {
-            return await CreateAsync<CommentEntity, CommentDto>(request.Dto);
-        }
+            => await CreateAsync<CommentEntity, CommentDto>(request.Dto);
     }
 }

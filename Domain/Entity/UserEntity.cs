@@ -20,8 +20,16 @@ namespace Domain.Entity
         [Column(Order = 2)]
         public string LastName { get; set; }
 
-        public List<PostEntity> Posts { get; set; }
+        #region Related data
+
+        public ICollection<FriendEntity> InvitedByUsers { get; set; }
+
+        public ICollection<FriendEntity> InvitedUsers { get; set; }
+
+        public ICollection<PostEntity> Posts { get; set; }
 
         public List<RefreshTokenEntity> RefreshTokens { get; set; }
+
+        #endregion Related data
     }
 }

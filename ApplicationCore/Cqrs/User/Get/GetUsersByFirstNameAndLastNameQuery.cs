@@ -15,10 +15,8 @@ namespace ApplicationCore.Cqrs.User.Get
         {
         }
 
-        public Task<IEnumerable<UserDto>> Handle(GetUsersByFirstNameAndLastNameQuery request, CancellationToken cancellationToken)
-        {
-            return GetElementsAsync<UserEntity, UserDto>(x => x.FirstName.ToLower() == request.FirstName.ToLower()
+        public async Task<IEnumerable<UserDto>> Handle(GetUsersByFirstNameAndLastNameQuery request, CancellationToken cancellationToken)
+            => await GetElementsAsync<UserEntity, UserDto>(x => x.FirstName.ToLower() == request.FirstName.ToLower()
                 && x.LastName.ToLower() == request.LastName.ToLower());
-        }
     }
 }
