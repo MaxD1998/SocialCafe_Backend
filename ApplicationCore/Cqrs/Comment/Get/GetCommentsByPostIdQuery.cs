@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Comment.Get
         }
 
         public async Task<IEnumerable<CommentDto>> Handle(GetCommentsByPostIdQuery request, CancellationToken cancellationToken)
-        {
-            return await GetElementsAsync<CommentEntity, CommentDto>(x => x.PostId.Equals(request.PostId));
-        }
+            => await GetElementsAsync<CommentEntity, CommentDto>(x => x.PostId.Equals(request.PostId));
     }
 }

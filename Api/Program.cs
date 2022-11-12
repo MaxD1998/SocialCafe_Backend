@@ -26,7 +26,8 @@ service.AddSingleton<ISettings>(settings);
 
 service.AddControllers();
 service.AddHttpContextAccessor();
-service.AddFluentValidation();
+service.AddFluentValidationAutoValidation();
+service.AddFluentValidationClientsideAdapters();
 service.AddValidatorsFromAssembly(typeof(ApplicationCoreAssembly).Assembly);
 service.AddDbContext<DataContext>();
 service.AddMediatR(typeof(ApplicationCoreAssembly).Assembly);
@@ -69,10 +70,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetService<DataContext>();

@@ -1,7 +1,9 @@
 ﻿using Api.Bases;
+using ApplicationCore.Cqrs.User.Delete;
 using ApplicationCore.Cqrs.User.Get;
 using ApplicationCore.Dtos.User;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -10,6 +12,14 @@ namespace Api.Controllers
     {
         public UserController(IMediator mediator) : base(mediator)
         {
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            var result = await Mediator.Send(new DeleteUserCommand(id));
+
+            return result ? Ok() : NotFound();
         }
 
         [HttpGet("ByEmail")]

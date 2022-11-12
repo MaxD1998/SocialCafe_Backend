@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.User.Create
         }
 
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
-        {
-            return await CreateAsync<UserEntity, UserDto>(request.Dto);
-        }
+            => await CreateAsync<UserEntity, UserDto>(request.Dto);
     }
 }

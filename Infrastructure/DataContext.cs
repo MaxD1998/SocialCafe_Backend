@@ -13,7 +13,7 @@ namespace Infrastructure
             var config = ConfigHelper.SetConfings();
             var connectionstring = config.GetConnectionString(nameof(ConnectionStrings.DbConnectionString));
 
-            builder.UseSqlServer(connectionstring);
+            builder.UseNpgsql(connectionstring);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

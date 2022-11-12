@@ -42,7 +42,7 @@ namespace Api.Controllers
 
         private ISettings Settings { get; }
 
-        [HttpPost("RefreshToken")]
+        [HttpGet("RefreshToken")]
         public async Task<ActionResult<AuthorizeDto>> GetToken()
         {
             var refreshToken = CookieService.GetCookie(CookieNameConst.RefreshToken);

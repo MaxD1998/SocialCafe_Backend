@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Post.Create
         }
 
         public async Task<PostDto> Handle(CreatePostCommand request, CancellationToken cancellationToken)
-        {
-            return await CreateAsync<PostEntity, PostDto>(request.Dto);
-        }
+            => await CreateAsync<PostEntity, PostDto>(request.Dto);
     }
 }

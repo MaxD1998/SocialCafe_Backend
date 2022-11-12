@@ -13,132 +13,141 @@ namespace Infrastructure.Repositories
     {
         public async Task<bool> CheckRecordExist<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                return await context.Set<T>()
-                    .AnyAsync(expression);
-            }
+            using var context = new DataContext();
+
+            return await context.Set<T>()
+                .AnyAsync(expression);
         }
 
         public async Task<T> CreateAsync<T>(T entity) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                var result = await context.Set<T>()
-                    .AddAsync(entity);
+            using var context = new DataContext();
 
-                await context.SaveChangesAsync();
+            var result = await context.Set<T>()
+                .AddAsync(entity);
 
-                return await context.Set<T>()
-                    .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
-            }
+            await context.SaveChangesAsync();
+
+            return await context.Set<T>()
+                .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
         }
 
         public async Task<IEnumerable<T>> CreateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                await context.Set<T>()
-                    .AddRangeAsync(entities);
+            using var context = new DataContext();
 
-                await context.SaveChangesAsync();
+            await context.Set<T>()
+                .AddRangeAsync(entities);
+            await context.SaveChangesAsync();
 
-                return entities;
-            }
+            return entities;
+        }
+
+        public async Task<bool> DeleteAsync<T>(int id) where T : BaseEntity
+        {
+            using var context = new DataContext();
+
+            var result = await context.Set<T>()
+                .FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+            if (result is null)
+                return false;
+
+            context.Set<T>()
+                .Remove(result);
+
+            await context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(bool disableAutoInclude = false) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                var query = context.Set<T>()
-                    .AsNoTracking();
+            using var context = new DataContext();
 
-                if (disableAutoInclude)
-                    query = query.IgnoreAutoIncludes();
+            var query = context.Set<T>()
+                .AsNoTracking();
 
-                return await query.ToListAsync();
-            }
+            if (disableAutoInclude)
+                query = query.IgnoreAutoIncludes();
+
+            return await query.ToListAsync();
         }
 
         public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> expression,
             bool disableAutoInclude = false) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                var query = context.Set<T>()
-                    .AsNoTracking();
+            using var context = new DataContext();
 
-                if (disableAutoInclude)
-                    query = query.IgnoreAutoIncludes();
+            var query = context.Set<T>()
+                .AsNoTracking();
 
-                return await query.FirstOrDefaultAsync(expression);
-            }
+            if (disableAutoInclude)
+                query = query.IgnoreAutoIncludes();
+
+            return await query.FirstOrDefaultAsync(expression);
         }
 
         public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression,
             bool disableAutoInclude = false) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                var query = context.Set<T>()
-                    .AsNoTracking()
-                    .Where(expression);
+            using var context = new DataContext();
 
-                if (disableAutoInclude)
-                    query = query.IgnoreAutoIncludes();
+            var query = context.Set<T>()
+                .AsNoTracking()
+                .Where(expression);
 
-                return await query.ToListAsync();
-            }
+            if (disableAutoInclude)
+                query = query.IgnoreAutoIncludes();
+
+            return await query.ToListAsync();
         }
 
         public async Task<T> UpdateAsync<T>(int id, T entity) where T : BaseEntity
         {
-            using (var context = new DataContext())
-            {
-                var record = await context.Set<T>()
-                    .IgnoreAutoIncludes()
-                    .FirstOrDefaultAsync(x => x.Id.Equals(id));
+            using var context = new DataContext();
 
-                record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
-                Map(entity, record);
+            var record = await context.Set<T>()
+                .IgnoreAutoIncludes()
+                .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
-                var result = context.Set<T>()
-                    .Update(record);
+            record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
+            Map(entity, record);
 
-                await context.SaveChangesAsync();
+            var result = context.Set<T>()
+                .Update(record);
 
-                return await context.Set<T>()
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
-            }
+            await context.SaveChangesAsync();
+
+            return await context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
         }
 
         public async Task<IEnumerable<T>> UpdateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
         {
-            using (var context = new DataContext())
+            using var context = new DataContext();
+
+            var ids = entities.Select(x => x.Id);
+            var records = await context.Set<T>()
+                .IgnoreAutoIncludes()
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync();
+
+            records.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));
+
+            foreach (var record in records)
             {
-                var ids = entities.Select(x => x.Id);
-                var records = await context.Set<T>()
-                    .IgnoreAutoIncludes()
-                    .Where(x => ids.Contains(x.Id))
-                    .ToListAsync();
-
-                records.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));
-
-                foreach (var record in records)
-                {
-                    var entity = entities.FirstOrDefault(x => x.Id.Equals(record.Id));
-                    Map(entity, record);
-                }
-
-                context.Set<T>()
-                    .UpdateRange(records);
-
-                await context.SaveChangesAsync();
-
-                return entities;
+                var entity = entities.FirstOrDefault(x => x.Id.Equals(record.Id));
+                Map(entity, record);
             }
+
+            context.Set<T>()
+                .UpdateRange(records);
+
+            await context.SaveChangesAsync();
+
+            return entities;
         }
     }
 }

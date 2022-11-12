@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Friend.Create
         }
 
         public async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
-        {
-            return await CreateAsync<FriendEntity, FriendDto>(request.Dto);
-        }
+            => await CreateAsync<FriendEntity, FriendDto>(request.Dto);
     }
 }

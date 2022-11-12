@@ -16,8 +16,6 @@ namespace ApplicationCore.Cqrs.Post.Get
         }
 
         public async Task<IEnumerable<PostDto>> Handle(GetPostsByUserIdQuery request, CancellationToken cancellationToken)
-        {
-            return await GetElementsAsync<PostEntity, PostDto>(x => x.UserId.Equals(request.UserId));
-        }
+            => await GetElementsAsync<PostEntity, PostDto>(x => x.UserId.Equals(request.UserId));
     }
 }
