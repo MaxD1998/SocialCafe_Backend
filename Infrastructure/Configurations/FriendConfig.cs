@@ -1,12 +1,12 @@
 ﻿using Domain.Entity;
-using Microsoft.EntityFrameworkCore;
+using Infrastructure.Bases;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations
 {
-    public class FriendConfig : IEntityTypeConfiguration<FriendEntity>
+    public class FriendConfig : BaseConfig<FriendEntity>
     {
-        public void Configure(EntityTypeBuilder<FriendEntity> builder)
+        protected override void ConfigureEntity(EntityTypeBuilder<FriendEntity> builder)
         {
             builder.HasOne(x => x.Inviter)
                 .WithMany(x => x.InvitedUsers)

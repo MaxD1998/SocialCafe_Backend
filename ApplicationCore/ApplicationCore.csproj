@@ -44,4 +44,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cqrs\RefreshToken\Create\" />
+    <Folder Include="Cqrs\User\Update\" />
+    <Folder Include="Dtos\Message\Validators\" />
+  </ItemGroup>
+
 </Project>

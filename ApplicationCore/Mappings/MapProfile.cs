@@ -1,6 +1,9 @@
 ﻿using ApplicationCore.Dtos.Comment;
+using ApplicationCore.Dtos.Conversation;
+using ApplicationCore.Dtos.ConversationMember;
 using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Dtos.Login;
+using ApplicationCore.Dtos.Message;
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Dtos.RefreshToken;
 using ApplicationCore.Dtos.User;
@@ -13,18 +16,29 @@ namespace ApplicationCore.Mappings
     {
         public MapProfile()
         {
-            CreateMap<CommentDto, CommentEntity>().ReverseMap();
-            CreateMap<CommentInputDto, CommentEntity>().ReverseMap();
-            CreateMap<FriendDto, FriendEntity>().ReverseMap();
-            CreateMap<FriendInputDto, FriendEntity>().ReverseMap();
-            CreateMap<PostDto, PostEntity>().ReverseMap();
-            CreateMap<PostInputDto, PostEntity>().ReverseMap();
-            CreateMap<RefreshTokenDto, RefreshTokenEntity>().ReverseMap();
-            CreateMap<RefreshTokenInputDto, RefreshTokenEntity>().ReverseMap();
-            CreateMap<RegisterDto, UserInputDto>().ReverseMap();
+            //Entity to Dto
+            CreateMap<CommentEntity, CommentDto>();
+            CreateMap<ConversationEntity, ConversationDto>();
+            CreateMap<ConversationMemberEntity, ConversationMemberDto>();
+            CreateMap<MessageEntity, MessageDto>();
+            CreateMap<PostEntity, PostDto>();
+            CreateMap<RefreshTokenEntity, RefreshTokenDto>();
+            CreateMap<UserEntity, UserDto>();
+
+            //Dto to Entity
+            CreateMap<CommentInputDto, CommentEntity>();
+            CreateMap<ConversationInputDto, ConversationEntity>();
+            CreateMap<ConversationMemberInputDto, ConversationMemberEntity>();
+            CreateMap<FriendInputDto, FriendEntity>();
+            CreateMap<MessageInputDto, MessageEntity>();
+            CreateMap<PostInputDto, PostEntity>();
+            CreateMap<RefreshTokenInputDto, RefreshTokenEntity>();
+            CreateMap<UserInputDto, UserEntity>();
+
+            //Dto to Dto
+            CreateMap<RegisterDto, UserInputDto>();
             CreateMap<UserDto, LoginDto>()
                 .ForMember(x => x.Password, map => map.MapFrom(x => x.HashedPassword));
-            CreateMap<UserDto, UserEntity>().ReverseMap();
             CreateMap<UserDto, UserInputDto>().ReverseMap();
         }
     }

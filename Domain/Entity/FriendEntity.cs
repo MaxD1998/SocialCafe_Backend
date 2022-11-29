@@ -1,9 +1,7 @@
 ﻿using Domain.Base;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
-    [Table("Friend")]
     public class FriendEntity : BaseEntity
     {
         public int InviterId { get; set; }

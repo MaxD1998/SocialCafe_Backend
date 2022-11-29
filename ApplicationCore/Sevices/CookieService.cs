@@ -5,29 +5,29 @@ namespace ApplicationCore.Sevices
 {
     public class CookieService : ICookieService
     {
+        private readonly IHttpContextAccessor _accessor;
+
         public CookieService(IHttpContextAccessor accessor)
         {
-            Accessor = accessor;
+            _accessor = accessor;
         }
-
-        private IHttpContextAccessor Accessor { get; }
 
         public void AddCookie(string name, string value, int expire)
         {
             var cookie = new CookieOptions()
             {
-                HttpOnly = true,
+                HttpOnly = false,
                 Expires = DateTime.UtcNow.AddDays(expire),
                 SameSite = SameSiteMode.None,
                 Secure = true,
             };
 
-            Accessor.HttpContext.Response.Cookies.Append(name, value, cookie);
+            _accessor.HttpContext.Response.Cookies.Append(name, value, cookie);
         }
 
         public string GetCookie(string name)
         {
-            var isValue = Accessor.HttpContext.Request.Cookies.TryGetValue(name, out var value);
+            var isValue = _accessor.HttpContext.Request.Cookies.TryGetValue(name, out var value);
 
             if (isValue)
             {

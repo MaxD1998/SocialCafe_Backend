@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
-    [Table("RefreshToken")]
     public class RefreshTokenEntity : BaseEntity
     {
         public DateTime CreationDate { get; set; }
@@ -11,5 +10,14 @@ namespace Domain.Entity
         public DateTime ExpireDate { get; set; }
 
         public Guid Token { get; set; }
+
+        [Column(Order = 1)]
+        public int UserId { get; set; }
+
+        #region Related data
+
+        public UserEntity User { get; set; }
+
+        #endregion Related data
     }
 }

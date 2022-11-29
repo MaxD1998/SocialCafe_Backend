@@ -16,7 +16,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<FriendDto>> CreateFriendAsync([FromBody] FriendInputDto dto)
         {
-            var result = await Mediator.Send(new CreateFriendCommand(dto));
+            var result = await _mediator.Send(new CreateFriendCommand(dto));
 
             return Ok(result);
         }
@@ -24,7 +24,7 @@ namespace Api.Controllers
         [HttpGet("UserId/{userId}")]
         public async Task<ActionResult<IEnumerable<FriendDto>>> CreateFriendsByUserIdAsync([FromRoute] int userId)
         {
-            var result = await Mediator.Send(new GetFriendsByUserIdQuery(userId));
+            var result = await _mediator.Send(new GetFriendsByUserIdQuery(userId));
 
             return Ok(result);
         }

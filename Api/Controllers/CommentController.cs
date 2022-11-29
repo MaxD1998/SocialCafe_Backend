@@ -16,7 +16,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CommentDto>> CreateCommentAsync([FromBody] CommentInputDto dto)
         {
-            var result = await Mediator.Send(new CreateCommentCommand(dto));
+            var result = await _mediator.Send(new CreateCommentCommand(dto));
 
             return Ok(result);
         }
@@ -24,7 +24,7 @@ namespace Api.Controllers
         [HttpGet("PostId/{postId}")]
         public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsAsync([FromRoute] int postId)
         {
-            var result = await Mediator.Send(new GetCommentsByPostIdQuery(postId));
+            var result = await _mediator.Send(new GetCommentsByPostIdQuery(postId));
 
             return Ok(result);
         }

@@ -9,12 +9,12 @@ namespace ApplicationCore.Sevices
 {
     public class TokenGeneratorService : ITokenGeneratorService
     {
+        public readonly ISettings _settings;
+
         public TokenGeneratorService(ISettings settings)
         {
-            Settings = settings;
+            _settings = settings;
         }
-
-        public ISettings Settings { get; }
 
         public string GenerateJwt(UserDto user)
         {
@@ -26,12 +26,12 @@ namespace ApplicationCore.Sevices
                 new Claim(ClaimTypes.Surname, user.LastName)
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Settings.GetJwtKey()));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.GetJwtKey()));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(Settings.GetJwtExpireMinutes()),
+                Expires = DateTime.UtcNow.AddMinutes(_settings.GetJwtExpireMinutes()),
                 SigningCredentials = creds
             };
 

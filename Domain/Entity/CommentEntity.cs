@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
-    [Table("Comment")]
     public class CommentEntity : BaseEntity
     {
         [Column(Order = 1)]

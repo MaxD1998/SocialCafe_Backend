@@ -7,5 +7,7 @@
         public DateTime ExpireDate { get; set; }
 
         public Guid Token { get; set; }
+
+        public int UserId { get; set; }
     }
 }

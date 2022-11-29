@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entity
 {
-    [Table("User")]
     public class UserEntity : BaseEntity
     {
         public List<CommentEntity> Comments { get; set; }
+
+        [Column(Order = 5)]
+        public string ConnectionId { get; set; }
 
         [Column(Order = 3)]
         public string Email { get; set; }
@@ -28,7 +30,11 @@ namespace Domain.Entity
 
         public ICollection<PostEntity> Posts { get; set; }
 
-        public List<RefreshTokenEntity> RefreshTokens { get; set; }
+        public ICollection<MessageEntity> RecieveMessages { get; set; }
+
+        public RefreshTokenEntity RefreshToken { get; set; }
+
+        public ICollection<MessageEntity> SendMessages { get; set; }
 
         #endregion Related data
     }

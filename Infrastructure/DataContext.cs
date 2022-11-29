@@ -1,8 +1,8 @@
 ﻿using ApplicationCore.Helpers;
 using ApplicationCore.Settings;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Infrastructure
 {
@@ -18,10 +18,7 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfiguration(new CommentConfig());
-            builder.ApplyConfiguration(new FriendConfig());
-            builder.ApplyConfiguration(new PostConfig());
-            builder.ApplyConfiguration(new UserConfig());
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }

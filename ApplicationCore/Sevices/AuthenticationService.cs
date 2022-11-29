@@ -1,5 +1,6 @@
-﻿using ApplicationCore.Cqrs.User.Create;
-using ApplicationCore.Cqrs.User.Delete;
+﻿using ApplicationCore.Cqrs.RefreshToken.Create;
+using ApplicationCore.Cqrs.RefreshToken.Get;
+using ApplicationCore.Cqrs.RefreshToken.Update;
 using ApplicationCore.Cqrs.User.Get;
 using ApplicationCore.Dtos;
 using ApplicationCore.Dtos.Login;
@@ -16,28 +17,25 @@ namespace ApplicationCore.Sevices
 {
     public class AuthenticationService : IAuthenticationService
     {
+        private readonly IMediator _mediator;
+        private readonly IPasswordHasher<UserDto> _passwordHasher;
+        private readonly ISettings _settings;
+        private readonly ITokenGeneratorService _tokenGeneratorService;
+
         public AuthenticationService(IMediator mediator,
-            IPasswordHasher<UserDto> passwordHasher,
+                                            IPasswordHasher<UserDto> passwordHasher,
             ISettings settings,
             ITokenGeneratorService tokenGeneratorService)
         {
-            Mediator = mediator;
-            PasswordHasher = passwordHasher;
-            Settings = settings;
-            TokenGeneratorService = tokenGeneratorService;
+            _mediator = mediator;
+            _passwordHasher = passwordHasher;
+            _settings = settings;
+            _tokenGeneratorService = tokenGeneratorService;
         }
-
-        private IMediator Mediator { get; }
-
-        private IPasswordHasher<UserDto> PasswordHasher { get; }
-
-        private ISettings Settings { get; }
-
-        private ITokenGeneratorService TokenGeneratorService { get; }
 
         public async Task<AuthorizeDto> GetAuthorizationAsync(LoginDto dto)
         {
-            var user = await Mediator.Send(new GetUserByEmailQuery(dto.Email));
+            var user = await _mediator.Send(new GetUserByEmailQuery(dto.Email));
 
             return await GetAuthorizationAsync(user, dto.Password);
         }
@@ -46,70 +44,61 @@ namespace ApplicationCore.Sevices
         {
             CheckLoginData(dto, password);
 
-            var refreshToken = await GetRefreshTokenAsync(dto);
+            var refreshToken = await AddOrUpdateRefreshTokenAsync(dto.Id);
 
             return new AuthorizeDto()
             {
                 Username = $"{dto.FirstName} {dto.LastName}",
-                Token = TokenGeneratorService.GenerateJwt(dto),
+                Token = _tokenGeneratorService.GenerateJwt(dto),
                 RefreshToken = refreshToken
             };
         }
 
-        public async Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken)
+        public async Task<AuthorizeDto> GetAuthorizationAsync(Guid token)
         {
-            var user = await Mediator.Send(new GetUserByRefreshTokenQuery(refreshToken));
+            var refreshToken = await _mediator.Send(new GetRefereshTokenByTokenQuery(token));
 
-            user.ThrowIfNull(new UnauthorizeException(ErrorMessages.SessionWasExpired));
+            refreshToken.ThrowIfNull(new ForbiddenException(ErrorMessages.SessionWasExpired));
+
+            var user = refreshToken.User;
 
             return new AuthorizeDto()
             {
                 Username = $"{user.FirstName} {user.LastName}",
-                Token = TokenGeneratorService.GenerateJwt(user),
+                Token = _tokenGeneratorService.GenerateJwt(user),
             };
         }
 
-        private async Task<Guid> AddRefreshTokenAsync(UserDto dto)
+        private async Task<Guid> AddOrUpdateRefreshTokenAsync(int userId)
         {
-            var newRefreshToken = new RefreshTokenInputDto()
+            var inputRefreshToken = new RefreshTokenInputDto()
             {
                 CreationDate = DateTime.UtcNow,
-                ExpireDate = DateTime.UtcNow.AddDays(Settings.GetRefreshTokenExpireDays()),
-                Token = TokenGeneratorService.GenerateRefreshToken(),
+                ExpireDate = DateTime.UtcNow.AddDays(_settings.GetRefreshTokenExpireDays()),
+                Token = _tokenGeneratorService.GenerateRefreshToken(),
+                UserId = userId,
             };
 
-            var createUserResponse = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
-            var createdRefreshToken = createUserResponse.RefreshTokens
-                .LastOrDefault();
+            var oldRefreshToken = await _mediator.Send(new GetRefreshTokenByUserIdQuery(userId));
 
-            return createdRefreshToken.Token;
+            if (oldRefreshToken is null)
+            {
+                var newRefreshToken = await _mediator.Send(new CreateRefreshTokenCommand(inputRefreshToken));
+                return newRefreshToken.Token;
+            }
+
+            var updatedRefreshToken = await _mediator.Send(new UpdateRefreshTokenCommand(oldRefreshToken.Id, inputRefreshToken));
+            return updatedRefreshToken.Token;
         }
 
         private void CheckLoginData(UserDto dto, string password)
         {
             dto.ThrowIfNull(new UnauthorizeException(ErrorMessages.WrongEmailOrPassword));
 
-            var passwordVerfication = PasswordHasher.VerifyHashedPassword(dto, dto?.HashedPassword, password);
+            var passwordVerfication = _passwordHasher.VerifyHashedPassword(dto, dto?.HashedPassword, password);
 
             if (passwordVerfication == PasswordVerificationResult.Failed)
-            {
                 throw new UnauthorizeException(ErrorMessages.WrongEmailOrPassword);
-            }
-        }
-
-        private async Task<bool> DeleteOldRefreshTokens(UserDto dto)
-        {
-            var oldRefreshTokens = dto.RefreshTokens
-                .Where(x => x.ExpireDate < DateTime.UtcNow)
-                .ToList();
-
-            return await Mediator.Send(new DeleteRefreshTokensCommand(dto.Id, oldRefreshTokens));
-        }
-
-        private async Task<Guid> GetRefreshTokenAsync(UserDto dto)
-        {
-            await DeleteOldRefreshTokens(dto);
-            return await AddRefreshTokenAsync(dto);
         }
     }
 }

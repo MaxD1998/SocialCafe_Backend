@@ -16,7 +16,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<PostDto>> CreatePostAsync([FromBody] PostInputDto dto)
         {
-            var result = await Mediator.Send(new CreatePostCommand(dto));
+            var result = await _mediator.Send(new CreatePostCommand(dto));
 
             return Ok(result);
         }
@@ -24,7 +24,7 @@ namespace Api.Controllers
         [HttpGet("{postId}")]
         public async Task<ActionResult<PostDto>> GetPostByIdAsync([FromRoute] int postId)
         {
-            var result = await Mediator.Send(new GetPostByIdQuery(postId));
+            var result = await _mediator.Send(new GetPostByIdQuery(postId));
 
             return Ok(result);
         }
@@ -32,7 +32,7 @@ namespace Api.Controllers
         [HttpGet("UserId/{userId}")]
         public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByUserIdAsync([FromRoute] int userId)
         {
-            var result = await Mediator.Send(new GetPostsByUserIdQuery(userId));
+            var result = await _mediator.Send(new GetPostsByUserIdQuery(userId));
 
             return Ok(result);
         }
