@@ -1,11 +1,11 @@
-﻿using ApplicationCore.Dtos.Message;
+﻿using ApplicationCore.Dtos.ConversationMember;
 
 namespace ApplicationCore.Dtos.Conversation
 {
     public class ConversationDto : ConversationInputDto
     {
-        public int Id { get; set; }
+        public List<ConversationMemberDto> ConversationMembers { get; set; }
 
-        public List<MessageDto> Messages { get; set; }
+        public int Id { get; set; }
     }
 }

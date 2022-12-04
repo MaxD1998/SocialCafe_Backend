@@ -6,12 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Cqrs\Post\Update\**" />
-    <EmbeddedResource Remove="Cqrs\Post\Update\**" />
-    <None Remove="Cqrs\Post\Update\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="FluentValidation" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="11.0.0" />
@@ -42,12 +36,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ErrorMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Cqrs\RefreshToken\Create\" />
-    <Folder Include="Cqrs\User\Update\" />
-    <Folder Include="Dtos\Message\Validators\" />
   </ItemGroup>
 
 </Project>
