@@ -3,7 +3,6 @@ using ApplicationCore.Cqrs.Conversation.Create;
 using ApplicationCore.Cqrs.Conversation.Get;
 using ApplicationCore.Cqrs.ConversationMember.Create;
 using ApplicationCore.Dtos.Conversation;
-using ApplicationCore.Dtos.ConversationMember;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,15 +23,13 @@ namespace Api.Controllers
         }
 
         [HttpPost("Extend")]
-        public async Task<ActionResult<ConversationDto>> CreateConversationExtendAsync(
-            [FromBody] ConversationInputDto conversationDto,
-            [FromBody] List<ConversationMemberInputDto> conversationMembersDto)
+        public async Task<ActionResult<ConversationDto>> CreateConversationExtendAsync([FromBody] ConversationInputExtendDto dto)
         {
-            var conversation = await _mediator.Send(new CreateConversationCommand(conversationDto));
+            var conversation = await _mediator.Send(new CreateConversationCommand(dto));
 
-            conversationMembersDto.ForEach(x => x.ConversationId = conversation.Id);
+            dto.ConversationMembers.ForEach(x => x.ConversationId = conversation.Id);
 
-            await _mediator.Send(new CreateConversationMembersCommand(conversationMembersDto));
+            await _mediator.Send(new CreateConversationMembersCommand(dto.ConversationMembers));
 
             var result = await _mediator.Send(new GetConversationByIdQuery(conversation.Id));
 
