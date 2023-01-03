@@ -48,6 +48,7 @@ namespace ApplicationCore.Sevices
 
             return new AuthorizeDto()
             {
+                Id = dto.Id,
                 Username = $"{dto.FirstName} {dto.LastName}",
                 Token = _tokenGeneratorService.GenerateJwt(dto),
                 RefreshToken = refreshToken
@@ -64,6 +65,7 @@ namespace ApplicationCore.Sevices
 
             return new AuthorizeDto()
             {
+                Id = user.Id,
                 Username = $"{user.FirstName} {user.LastName}",
                 Token = _tokenGeneratorService.GenerateJwt(user),
             };

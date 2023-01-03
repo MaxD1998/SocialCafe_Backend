@@ -50,17 +50,17 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ConversationId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    Nick = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    ConversationEntityId = table.Column<int>(type: "integer", nullable: true)
+                    Nick = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ConversationMember", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ConversationMember_Conversation_ConversationEntityId",
-                        column: x => x.ConversationEntityId,
+                        name: "FK_ConversationMember_Conversation_ConversationId",
+                        column: x => x.ConversationId,
                         principalTable: "Conversation",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ConversationMember_User_UserId",
                         column: x => x.UserId,
@@ -206,11 +206,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Comment_UserId",
                 table: "Comment",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ConversationMember_ConversationEntityId",
-                table: "ConversationMember",
-                column: "ConversationEntityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ConversationMember_ConversationId_UserId",

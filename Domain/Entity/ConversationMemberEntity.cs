@@ -15,6 +15,8 @@ namespace Domain.Entity
 
         #region Related data
 
+        public ConversationEntity Conversation { get; set; }
+
         public UserEntity User { get; set; }
 
         #endregion Related data

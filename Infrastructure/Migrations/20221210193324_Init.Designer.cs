@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221129174050_Init")]
+    [Migration("20221210193324_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -82,9 +82,6 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ConversationEntityId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("ConversationId")
                         .HasColumnType("integer")
                         .HasColumnOrder(1);
@@ -98,8 +95,6 @@ namespace Infrastructure.Migrations
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ConversationEntityId");
 
                     b.HasIndex("UserId");
 
@@ -291,15 +286,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.ConversationMemberEntity", b =>
                 {
-                    b.HasOne("Domain.Entity.ConversationEntity", null)
+                    b.HasOne("Domain.Entity.ConversationEntity", "Conversation")
                         .WithMany("ConversationMembers")
-                        .HasForeignKey("ConversationEntityId");
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entity.UserEntity", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Conversation");
 
                     b.Navigation("User");
                 });
