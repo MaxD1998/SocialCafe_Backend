@@ -4,17 +4,16 @@ using AutoMapper;
 using Domain.Entity;
 using MediatR;
 
-namespace ApplicationCore.Cqrs.User.Delete
+namespace ApplicationCore.Cqrs.User.Delete;
+
+public record DeleteUserCommand(int Id) : IRequest<bool>;
+
+public class DeleteUserCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserCommand, bool>
 {
-    public record DeleteUserCommand(int Id) : IRequest<bool>;
-
-    public class DeleteUserCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserCommand, bool>
+    public DeleteUserCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
-        public DeleteUserCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-        {
-        }
-
-        public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
-            => await DeleteAsync<UserEntity>(request.Id);
     }
+
+    public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        => await DeleteAsync<UserEntity>(request.Id);
 }

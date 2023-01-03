@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Dtos.User
+﻿namespace ApplicationCore.Dtos.User;
+
+public class RegisterDto : UserInputDto
 {
-    public class RegisterDto : UserInputDto
-    {
-        public string Password { get; set; }
-    }
+    public string Password { get; set; }
 }

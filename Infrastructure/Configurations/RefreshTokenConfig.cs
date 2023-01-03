@@ -3,21 +3,20 @@ using Infrastructure.Bases;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations
+namespace Infrastructure.Configurations;
+
+public class RefreshTokenConfig : BaseConfig<RefreshTokenEntity>
 {
-    public class RefreshTokenConfig : BaseConfig<RefreshTokenEntity>
+    protected override void ConfigureEntity(EntityTypeBuilder<RefreshTokenEntity> builder)
     {
-        protected override void ConfigureEntity(EntityTypeBuilder<RefreshTokenEntity> builder)
-        {
-            builder.SetProperty(x => x.CreationDate, requiered: true);
-            builder.SetProperty(x => x.ExpireDate, requiered: true);
-            builder.SetProperty(x => x.Token, requiered: true);
+        builder.SetProperty(x => x.CreationDate, requiered: true);
+        builder.SetProperty(x => x.ExpireDate, requiered: true);
+        builder.SetProperty(x => x.Token, requiered: true);
 
-            builder.HasIndex(x => x.Token)
-                .IsUnique();
+        builder.HasIndex(x => x.Token)
+            .IsUnique();
 
-            builder.Navigation(x => x.User)
-                .AutoInclude();
-        }
+        builder.Navigation(x => x.User)
+            .AutoInclude();
     }
 }

@@ -1,6 +1,5 @@
-﻿namespace ApplicationCore.Dtos.Post.Validators
+﻿namespace ApplicationCore.Dtos.Post.Validators;
+
+public class PostValidator : BasePostValidator<PostInputDto>
 {
-    public class PostValidator : BasePostValidator<PostInputDto>
-    {
-    }
 }

@@ -5,28 +5,27 @@ using ApplicationCore.Dtos.Comment;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers
+namespace Api.Controllers;
+
+public class CommentController : BaseApiController
 {
-    public class CommentController : BaseApiController
+    public CommentController(IMediator mediator) : base(mediator)
     {
-        public CommentController(IMediator mediator) : base(mediator)
-        {
-        }
+    }
 
-        [HttpPost]
-        public async Task<ActionResult<CommentDto>> CreateCommentAsync([FromBody] CommentInputDto dto)
-        {
-            var result = await _mediator.Send(new CreateCommentCommand(dto));
+    [HttpPost]
+    public async Task<ActionResult<CommentDto>> CreateCommentAsync([FromBody] CommentInputDto dto)
+    {
+        var result = await _mediator.Send(new CreateCommentCommand(dto));
 
-            return Ok(result);
-        }
+        return Ok(result);
+    }
 
-        [HttpGet("PostId/{postId}")]
-        public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsAsync([FromRoute] int postId)
-        {
-            var result = await _mediator.Send(new GetCommentsByPostIdQuery(postId));
+    [HttpGet("PostId/{postId}")]
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsAsync([FromRoute] int postId)
+    {
+        var result = await _mediator.Send(new GetCommentsByPostIdQuery(postId));
 
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

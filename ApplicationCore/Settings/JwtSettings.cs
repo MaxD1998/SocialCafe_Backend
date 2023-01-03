@@ -1,9 +1,8 @@
-﻿namespace ApplicationCore.Settings
-{
-    public class JwtSettings
-    {
-        public int ExpireTime { get; set; }
+﻿namespace ApplicationCore.Settings;
 
-        public string JwtKey { get; set; }
-    }
+public class JwtSettings
+{
+    public int ExpireTime { get; set; }
+
+    public string JwtKey { get; set; }
 }

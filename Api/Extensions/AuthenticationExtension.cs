@@ -3,39 +3,38 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Api.Extensions
+namespace Api.Extensions;
+
+public static class AuthenticationExtension
 {
-    public static class AuthenticationExtension
+    public static void AddJwtAuthentication(this IServiceCollection services, Settings settings)
     {
-        public static void AddJwtAuthentication(this IServiceCollection services, Settings settings)
-        {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(opt =>
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    opt.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JwtSettings.JwtKey)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                    };
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JwtSettings.JwtKey)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
 
-                    opt.Events = new JwtBearerEvents
+                opt.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
                     {
-                        OnMessageReceived = context =>
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/SocialChat"))
                         {
-                            var accessToken = context.Request.Query["access_token"];
-                            var path = context.HttpContext.Request.Path;
-
-                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/SocialChat"))
-                            {
-                                context.Token = accessToken;
-                            }
-
-                            return Task.CompletedTask;
+                            context.Token = accessToken;
                         }
-                    };
-                });
-        }
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
     }
 }

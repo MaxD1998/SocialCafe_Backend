@@ -5,17 +5,16 @@ using AutoMapper;
 using Domain.Entity;
 using MediatR;
 
-namespace ApplicationCore.Cqrs.Friend.Create
+namespace ApplicationCore.Cqrs.Friend.Create;
+
+public record CreateFriendCommand(FriendInputDto Dto) : IRequest<FriendDto>;
+
+public class CreateFriendCommandHandler : BaseRequestHandler, IRequestHandler<CreateFriendCommand, FriendDto>
 {
-    public record CreateFriendCommand(FriendInputDto Dto) : IRequest<FriendDto>;
-
-    public class CreateFriendCommandHandler : BaseRequestHandler, IRequestHandler<CreateFriendCommand, FriendDto>
+    public CreateFriendCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
-        public CreateFriendCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-        {
-        }
-
-        public async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
-            => await CreateAsync<FriendEntity, FriendDto>(request.Dto);
     }
+
+    public async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
+        => await CreateAsync<FriendEntity, FriendDto>(request.Dto);
 }

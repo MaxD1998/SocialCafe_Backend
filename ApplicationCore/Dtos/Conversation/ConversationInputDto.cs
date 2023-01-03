@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Dtos.Conversation
+﻿namespace ApplicationCore.Dtos.Conversation;
+
+public class ConversationInputDto
 {
-    public class ConversationInputDto
-    {
-        public string Name { get; set; }
-    }
+    public string Name { get; set; }
 }

@@ -1,15 +1,14 @@
 ﻿using FluentValidation;
 
-namespace ApplicationCore.Dtos.Login
+namespace ApplicationCore.Dtos.Login;
+
+public class LoginDtoValidator : AbstractValidator<LoginDto>
 {
-    public class LoginDtoValidator : AbstractValidator<LoginDto>
+    public LoginDtoValidator()
     {
-        public LoginDtoValidator()
-        {
-            RuleFor(x => x.Email)
-                .EmailAddress();
-            RuleFor(x => x.Password)
-                .NotEmpty();
-        }
+        RuleFor(x => x.Email)
+            .EmailAddress();
+        RuleFor(x => x.Password)
+            .NotEmpty();
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Interfaces.Repositories
+﻿namespace ApplicationCore.Interfaces.Repositories;
+
+public interface IUnitOfWork
 {
-    public interface IUnitOfWork
-    {
-        public IBaseRepository BaseRepository { get; }
-    }
+    public IBaseRepository BaseRepository { get; }
 }

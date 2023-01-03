@@ -1,6 +1,5 @@
-﻿namespace ApplicationCore
+﻿namespace ApplicationCore;
+
+public class ApplicationCoreAssembly
 {
-    public class ApplicationCoreAssembly
-    {
-    }
 }

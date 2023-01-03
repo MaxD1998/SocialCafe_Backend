@@ -1,19 +1,18 @@
 ﻿using Domain.Base;
 
-namespace Domain.Entity
+namespace Domain.Entity;
+
+public class FriendEntity : BaseEntity
 {
-    public class FriendEntity : BaseEntity
-    {
-        public int InviterId { get; set; }
+    public int InviterId { get; set; }
 
-        public int RecipientId { get; set; }
+    public int RecipientId { get; set; }
 
-        #region Related data
+    #region Related data
 
-        public UserEntity Inviter { get; set; }
+    public UserEntity Inviter { get; set; }
 
-        public UserEntity Recipient { get; set; }
+    public UserEntity Recipient { get; set; }
 
-        #endregion Related data
-    }
+    #endregion Related data
 }

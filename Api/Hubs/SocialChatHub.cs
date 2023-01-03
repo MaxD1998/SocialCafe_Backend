@@ -6,26 +6,25 @@ using ApplicationCore.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Api.Hubs
+namespace Api.Hubs;
+
+public class SocialChatHub : BaseHub
 {
-    public class SocialChatHub : BaseHub
+    private readonly IMediator _mediator;
+
+    public SocialChatHub(IMediator mediator, IChatService messageService) : base(messageService)
     {
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public SocialChatHub(IMediator mediator, IChatService messageService) : base(messageService)
-        {
-            _mediator = mediator;
-        }
+    public async Task CreateMessageAsync(MessageInputDto dto)
+    {
+        var result = await _mediator.Send(new CreateMessageCommand(dto));
+        var conversationMembers = await _mediator.Send(new GetConverastionMembersByConversationIdCommand(result.ConversationId));
+        var connectionIds = conversationMembers
+            .Select(x => x.User.ConnectionId)
+            .Where(x => x != null);
 
-        public async Task CreateMessageAsync(MessageInputDto dto)
-        {
-            var result = await _mediator.Send(new CreateMessageCommand(dto));
-            var conversationMembers = await _mediator.Send(new GetConverastionMembersByConversationIdCommand(result.ConversationId));
-            var connectionIds = conversationMembers
-                .Select(x => x.User.ConnectionId)
-                .Where(x => x != null);
-
-            await Clients.Clients(connectionIds).SendAsync("RecieveMessageHandler");
-        }
+        await Clients.Clients(connectionIds).SendAsync("RecieveMessageHandler");
     }
 }

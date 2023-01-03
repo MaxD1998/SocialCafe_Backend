@@ -1,11 +1,10 @@
-﻿namespace ApplicationCore.Dtos.Message
+﻿namespace ApplicationCore.Dtos.Message;
+
+public class MessageInputDto
 {
-    public class MessageInputDto
-    {
-        public int ConversationId { get; set; }
+    public int ConversationId { get; set; }
 
-        public string Text { get; set; }
+    public string Text { get; set; }
 
-        public int UserId { get; set; }
-    }
+    public int UserId { get; set; }
 }

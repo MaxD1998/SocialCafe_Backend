@@ -1,17 +1,16 @@
 ﻿using Domain.Base;
 
-namespace Domain.Entity
+namespace Domain.Entity;
+
+public class ConversationEntity : BaseEntity
 {
-    public class ConversationEntity : BaseEntity
-    {
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        #region Related data
+    #region Related data
 
-        public ICollection<ConversationMemberEntity> ConversationMembers { get; set; }
+    public ICollection<ConversationMemberEntity> ConversationMembers { get; set; }
 
-        public ICollection<MessageEntity> Messages { get; set; }
+    public ICollection<MessageEntity> Messages { get; set; }
 
-        #endregion Related data
-    }
+    #endregion Related data
 }

@@ -1,9 +1,8 @@
-﻿namespace ApplicationCore.Interfaces
-{
-    public interface IChatService
-    {
-        Task<IEnumerable<string>> GetConnectionIds(int userId);
+﻿namespace ApplicationCore.Interfaces;
 
-        Task UpdateUserConnectionId(int userId, string connectionId);
-    }
+public interface IChatService
+{
+    Task<IEnumerable<string>> GetConnectionIds(int userId);
+
+    Task UpdateUserConnectionId(int userId, string connectionId);
 }

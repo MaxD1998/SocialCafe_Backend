@@ -1,9 +1,8 @@
-﻿namespace ApplicationCore.Exceptions
+﻿namespace ApplicationCore.Exceptions;
+
+public class UnauthorizeException : Exception
 {
-    public class UnauthorizeException : Exception
+    public UnauthorizeException(string message) : base(message)
     {
-        public UnauthorizeException(string message) : base(message)
-        {
-        }
     }
 }

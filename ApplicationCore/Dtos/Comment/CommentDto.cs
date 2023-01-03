@@ -1,11 +1,10 @@
 ﻿using ApplicationCore.Dtos.User;
 
-namespace ApplicationCore.Dtos.Comment
-{
-    public class CommentDto : CommentInputDto
-    {
-        public int Id { get; set; }
+namespace ApplicationCore.Dtos.Comment;
 
-        public UserDto User { get; set; }
-    }
+public class CommentDto : CommentInputDto
+{
+    public int Id { get; set; }
+
+    public UserDto User { get; set; }
 }

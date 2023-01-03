@@ -3,38 +3,37 @@ using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Api.Bases
+namespace Api.Bases;
+
+[Authorize]
+public abstract class BaseHub : Hub
 {
-    [Authorize]
-    public abstract class BaseHub : Hub
+    protected readonly IChatService _messageService;
+
+    public BaseHub(IChatService messageService)
     {
-        protected readonly IChatService _messageService;
+        _messageService = messageService;
+    }
 
-        public BaseHub(IChatService messageService)
-        {
-            _messageService = messageService;
-        }
+    protected int UserId => Context.GetHttpContext().User.GetUserId();
 
-        protected int UserId => Context.GetHttpContext().User.GetUserId();
+    public override async Task OnConnectedAsync()
+    {
+        var connectionId = Context.ConnectionId;
 
-        public override async Task OnConnectedAsync()
-        {
-            var connectionId = Context.ConnectionId;
+        await _messageService.UpdateUserConnectionId(UserId, connectionId);
 
-            await _messageService.UpdateUserConnectionId(UserId, connectionId);
+        var connectionIds = await _messageService.GetConnectionIds(UserId);
 
-            var connectionIds = await _messageService.GetConnectionIds(UserId);
+        Clients.Clients(connectionIds);
+    }
 
-            Clients.Clients(connectionIds);
-        }
+    public override async Task OnDisconnectedAsync(Exception exception)
+    {
+        await _messageService.UpdateUserConnectionId(UserId, null);
 
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await _messageService.UpdateUserConnectionId(UserId, null);
+        var connectionIds = await _messageService.GetConnectionIds(UserId);
 
-            var connectionIds = await _messageService.GetConnectionIds(UserId);
-
-            Clients.Clients(connectionIds);
-        }
+        Clients.Clients(connectionIds);
     }
 }

@@ -3,24 +3,23 @@ using Infrastructure.Bases;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations
+namespace Infrastructure.Configurations;
+
+public class MessageConfig : BaseConfig<MessageEntity>
 {
-    public class MessageConfig : BaseConfig<MessageEntity>
+    protected override void ConfigureEntity(EntityTypeBuilder<MessageEntity> builder)
     {
-        protected override void ConfigureEntity(EntityTypeBuilder<MessageEntity> builder)
-        {
-            builder.SetProperty(x => x.Text, requiered: true);
+        builder.SetProperty(x => x.Text, requiered: true);
 
-            builder.HasOne(x => x.User)
-                .WithMany(x => x.SendMessages)
-                .HasForeignKey(x => x.UserId);
+        builder.HasOne(x => x.User)
+            .WithMany(x => x.SendMessages)
+            .HasForeignKey(x => x.UserId);
 
-            builder.HasOne(x => x.Converstaion)
-                .WithMany(x => x.Messages)
-                .HasForeignKey(x => x.ConversationId);
+        builder.HasOne(x => x.Converstaion)
+            .WithMany(x => x.Messages)
+            .HasForeignKey(x => x.ConversationId);
 
-            builder.Navigation(x => x.User)
-                .AutoInclude();
-        }
+        builder.Navigation(x => x.User)
+            .AutoInclude();
     }
 }

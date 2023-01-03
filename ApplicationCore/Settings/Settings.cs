@@ -1,41 +1,40 @@
 ﻿using ApplicationCore.Interfaces;
 
-namespace ApplicationCore.Settings
+namespace ApplicationCore.Settings;
+
+public class Settings : ISettings
 {
-    public class Settings : ISettings
+    public JwtSettings JwtSettings { get; set; }
+
+    public RefreshTokenSettings RefreshTokenSettings { get; set; }
+
+    public int GetJwtExpireMinutes()
     {
-        public JwtSettings JwtSettings { get; set; }
-
-        public RefreshTokenSettings RefreshTokenSettings { get; set; }
-
-        public int GetJwtExpireMinutes()
+        if (JwtSettings is null)
         {
-            if (JwtSettings is null)
-            {
-                return default;
-            }
-
-            return JwtSettings.ExpireTime;
+            return default;
         }
 
-        public string GetJwtKey()
-        {
-            if (JwtSettings is null)
-            {
-                return default;
-            }
+        return JwtSettings.ExpireTime;
+    }
 
-            return JwtSettings.JwtKey;
+    public string GetJwtKey()
+    {
+        if (JwtSettings is null)
+        {
+            return default;
         }
 
-        public int GetRefreshTokenExpireDays()
-        {
-            if (RefreshTokenSettings is null)
-            {
-                return default;
-            }
+        return JwtSettings.JwtKey;
+    }
 
-            return RefreshTokenSettings.ExpireTime;
+    public int GetRefreshTokenExpireDays()
+    {
+        if (RefreshTokenSettings is null)
+        {
+            return default;
         }
+
+        return RefreshTokenSettings.ExpireTime;
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace ApplicationCore.Interfaces
+﻿namespace ApplicationCore.Interfaces;
+
+public interface ISettings
 {
-    public interface ISettings
-    {
-        int GetJwtExpireMinutes();
+    int GetJwtExpireMinutes();
 
-        string GetJwtKey();
+    string GetJwtKey();
 
-        int GetRefreshTokenExpireDays();
-    }
+    int GetRefreshTokenExpireDays();
 }

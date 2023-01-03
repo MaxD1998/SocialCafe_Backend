@@ -1,6 +1,5 @@
-﻿namespace ApplicationCore.Dtos.Comment.Validators
+﻿namespace ApplicationCore.Dtos.Comment.Validators;
+
+public class CommentValidator : BaseCommentValidator<CommentInputDto>
 {
-    public class CommentValidator : BaseCommentValidator<CommentInputDto>
-    {
-    }
 }
