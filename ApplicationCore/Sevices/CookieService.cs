@@ -12,11 +12,11 @@ public class CookieService : ICookieService
         _accessor = accessor;
     }
 
-    public void AddCookie(string name, string value, int expire)
+    public void AddCookie(string name, string value, int expire, bool httpOnly)
     {
         var cookie = new CookieOptions()
         {
-            HttpOnly = false,
+            HttpOnly = httpOnly,
             Expires = DateTime.UtcNow.AddDays(expire),
             SameSite = SameSiteMode.None,
             Secure = true,

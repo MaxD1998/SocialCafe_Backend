@@ -13,18 +13,10 @@ public class ConversationMemberController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<ConversationMemberDto>> CreateConversationMemberAsync(ConversationMemberDto dto)
-    {
-        var result = await _mediator.Send(new CreateConversationMemberCommand(dto));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<ConversationMemberDto>> CreateAsync(ConversationMemberDto dto)
+        => await ApiResponseAsync<ConversationMemberDto, CreateConversationMemberCommand>(new(dto));
 
     [HttpPost("Range")]
-    public async Task<ActionResult<IEnumerable<ConversationMemberDto>>> CreateConversationMembersAsync(IEnumerable<ConversationMemberDto> dtos)
-    {
-        var results = await _mediator.Send(new CreateConversationMembersCommand(dtos));
-
-        return Ok(results);
-    }
+    public async Task<ActionResult<IEnumerable<ConversationMemberDto>>> CreatesAsync(IEnumerable<ConversationMemberDto> dtos)
+        => await ApiResponseAsync<IEnumerable<ConversationMemberDto>, CreateConversationMembersCommand>(new(dtos));
 }

@@ -22,26 +22,14 @@ public class UserController : BaseApiController
     }
 
     [HttpGet("ByEmail")]
-    public async Task<ActionResult<UserDto>> GetUserByEmailAsync([FromQuery] string email)
-    {
-        var results = await _mediator.Send(new GetUserByEmailQuery(email));
-
-        return Ok(results);
-    }
+    public async Task<ActionResult<UserDto>> GetByEmailAsync([FromQuery] string email)
+        => await ApiResponseAsync<UserDto, GetUserByEmailQuery>(new(email));
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersAsync()
-    {
-        var results = await _mediator.Send(new GetUsersQuery());
-
-        return Ok(results);
-    }
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetsAsync()
+        => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersQuery>(new());
 
     [HttpGet("ByFirstNameAndLastName")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersByFirstNameAndLastNameAsync([FromQuery] string firstName, [FromQuery] string lastName)
-    {
-        var results = await _mediator.Send(new GetUsersByFirstNameAndLastNameQuery(firstName, lastName));
-
-        return Ok(results);
-    }
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetsByFirstNameAndLastNameAsync([FromQuery] string firstName, [FromQuery] string lastName)
+        => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersByFirstNameAndLastNameQuery>(new(firstName, lastName));
 }

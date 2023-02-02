@@ -15,4 +15,11 @@ public abstract class BaseApiController : ControllerBase
     {
         _mediator = mediator;
     }
+
+    protected async Task<ActionResult<TResult>> ApiResponseAsync<TResult, TRequest>(TRequest request) where TRequest : notnull, IBaseRequest
+    {
+        var result = await _mediator.Send(request);
+
+        return Ok(result);
+    }
 }

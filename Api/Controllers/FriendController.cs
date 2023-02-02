@@ -14,18 +14,10 @@ public class FriendController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<FriendDto>> CreateFriendAsync([FromBody] FriendInputDto dto)
-    {
-        var result = await _mediator.Send(new CreateFriendCommand(dto));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<FriendDto>> CreateAsync([FromBody] FriendInputDto dto)
+        => await ApiResponseAsync<FriendDto, CreateFriendCommand>(new(dto));
 
     [HttpGet("UserId/{userId}")]
-    public async Task<ActionResult<IEnumerable<FriendDto>>> CreateFriendsByUserIdAsync([FromRoute] int userId)
-    {
-        var result = await _mediator.Send(new GetFriendsByUserIdQuery(userId));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<IEnumerable<FriendDto>>> GetsByUserIdAsync([FromRoute] int userId)
+        => await ApiResponseAsync<IEnumerable<FriendDto>, GetFriendsByUserIdQuery>(new(userId));
 }

@@ -8,7 +8,7 @@ public abstract class BaseConfig<TEntity> : IEntityTypeConfiguration<TEntity> wh
 {
     public void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        builder.ToTable(TableNameHelper.Convert(typeof(TEntity).Name));
+        builder.ToTable(TableNameHelper.Convert(nameof(TEntity)));
         ConfigureEntity(builder);
     }
 

@@ -58,7 +58,8 @@ public class AuthorizationController : BaseApiController
         var result = await _authorizationService.GetAuthorizationAsync(dto);
         var expireDays = _settings.GetRefreshTokenExpireDays();
 
-        _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays);
+        _cookieService.AddCookie(CookieNameConst.Id, result.Id.ToString(), expireDays, false);
+        _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays, true);
 
         return Ok(result);
     }
@@ -74,7 +75,8 @@ public class AuthorizationController : BaseApiController
         var result = await _authorizationService.GetAuthorizationAsync(user, registerDto.Password);
         var expireDays = _settings.GetRefreshTokenExpireDays();
 
-        _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays);
+        _cookieService.AddCookie(CookieNameConst.Id, result.Id.ToString(), expireDays, false);
+        _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays, true);
 
         return Ok(result);
     }

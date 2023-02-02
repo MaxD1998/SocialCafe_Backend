@@ -14,18 +14,10 @@ public class CommentController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<CommentDto>> CreateCommentAsync([FromBody] CommentInputDto dto)
-    {
-        var result = await _mediator.Send(new CreateCommentCommand(dto));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<CommentDto>> CreateAsync([FromBody] CommentInputDto dto)
+        => await ApiResponseAsync<CommentDto, CreateCommentCommand>(new(dto));
 
     [HttpGet("PostId/{postId}")]
-    public async Task<ActionResult<IEnumerable<CommentDto>>> GetCommentsAsync([FromRoute] int postId)
-    {
-        var result = await _mediator.Send(new GetCommentsByPostIdQuery(postId));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetsByPostIdAsync([FromRoute] int postId)
+        => await ApiResponseAsync<IEnumerable<CommentDto>, GetCommentsByPostIdQuery>(new(postId));
 }

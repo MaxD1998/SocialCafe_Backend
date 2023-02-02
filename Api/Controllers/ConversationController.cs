@@ -15,15 +15,11 @@ public class ConversationController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<ConversationDto>> CreateConversationAsync([FromBody] ConversationInputDto dto)
-    {
-        var result = await _mediator.Send(new CreateConversationCommand(dto));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<ConversationDto>> CreateAsync([FromBody] ConversationInputDto dto)
+        => await ApiResponseAsync<ConversationDto, CreateConversationCommand>(new(dto));
 
     [HttpPost("Extend")]
-    public async Task<ActionResult<ConversationDto>> CreateConversationExtendAsync([FromBody] ConversationInputExtendDto dto)
+    public async Task<ActionResult<ConversationDto>> CreateExtendAsync([FromBody] ConversationInputExtendDto dto)
     {
         var conversation = await _mediator.Send(new CreateConversationCommand(dto));
 
@@ -37,18 +33,10 @@ public class ConversationController : BaseApiController
     }
 
     [HttpGet("Id/{id}")]
-    public async Task<ActionResult<IEnumerable<ConversationDto>>> GetConversationByIdAsync([FromRoute] int id)
-    {
-        var result = await _mediator.Send(new GetConversationByIdQuery(id));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<ConversationDto>> GetByIdAsync([FromRoute] int id)
+        => await ApiResponseAsync<ConversationDto, GetConversationByIdQuery>(new(id));
 
     [HttpGet("UserId/{userId}")]
-    public async Task<ActionResult<IEnumerable<ConversationDto>>> GetConversationsByUserIdAsync([FromRoute] int userId)
-    {
-        var result = await _mediator.Send(new GetConversationsByUserIdQuery(userId));
-
-        return Ok(result);
-    }
+    public async Task<ActionResult<IEnumerable<ConversationDto>>> GetsByUserIdAsync([FromRoute] int userId)
+        => await ApiResponseAsync<IEnumerable<ConversationDto>, GetConversationByIdQuery>(new(userId));
 }
