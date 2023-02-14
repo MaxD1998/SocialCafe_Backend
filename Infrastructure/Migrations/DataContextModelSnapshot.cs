@@ -144,9 +144,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("text")
                         .HasColumnOrder(3);
 
-                    b.Property<int?>("UserEntityId")
-                        .HasColumnType("integer");
-
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnOrder(2);
@@ -154,8 +151,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ConversationId");
-
-                    b.HasIndex("UserEntityId");
 
                     b.HasIndex("UserId");
 
@@ -327,12 +322,8 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entity.UserEntity", null)
-                        .WithMany("RecieveMessages")
-                        .HasForeignKey("UserEntityId");
-
                     b.HasOne("Domain.Entity.UserEntity", "User")
-                        .WithMany("SendMessages")
+                        .WithMany("Messages")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -384,13 +375,11 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("InvitedUsers");
 
+                    b.Navigation("Messages");
+
                     b.Navigation("Posts");
 
-                    b.Navigation("RecieveMessages");
-
                     b.Navigation("RefreshToken");
-
-                    b.Navigation("SendMessages");
                 });
 #pragma warning restore 612, 618
         }

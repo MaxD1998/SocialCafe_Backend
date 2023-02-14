@@ -22,7 +22,7 @@ public class ChatService : IChatService
     public async Task<IEnumerable<string>> GetConnectionIds(int userId)
     {
         var friends = await _mediator.Send(new GetFriendsByUserIdQuery(userId));
-        return friends.Select(x => x.Friend.ConnectionId);
+        return friends.Select(x => x.User.ConnectionId);
     }
 
     public async Task UpdateUserConnectionId(int userId, string connectionId)

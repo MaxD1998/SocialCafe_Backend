@@ -23,7 +23,7 @@ public class AuthenticationService : IAuthenticationService
     private readonly ITokenGeneratorService _tokenGeneratorService;
 
     public AuthenticationService(IMediator mediator,
-                                        IPasswordHasher<UserDto> passwordHasher,
+        IPasswordHasher<UserDto> passwordHasher,
         ISettings settings,
         ITokenGeneratorService tokenGeneratorService)
     {

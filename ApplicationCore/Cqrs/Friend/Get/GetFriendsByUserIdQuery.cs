@@ -32,13 +32,13 @@ public class GetFriendsByUserIdQueryHandler : BaseRequestHandler, IRequestHandle
     {
         foreach (var friend in friends)
         {
-            var user = users.First(x => x.Id.Equals(friend.InviterId) || x.Equals(friend.RecipientId));
+            var user = users.First(x => x.Id.Equals(friend.InviterId) || x.Id.Equals(friend.RecipientId));
 
             yield return new FriendDto()
             {
                 Id = friend.Id,
-                Friend = _mapper.Map<UserDto>(user),
-                FriendId = user.Id,
+                User = _mapper.Map<UserDto>(user),
+                UserId = user.Id,
             };
         }
     }

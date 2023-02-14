@@ -38,5 +38,5 @@ public class ConversationController : BaseApiController
 
     [HttpGet("UserId/{userId}")]
     public async Task<ActionResult<IEnumerable<ConversationDto>>> GetsByUserIdAsync([FromRoute] int userId)
-        => await ApiResponseAsync<IEnumerable<ConversationDto>, GetConversationByIdQuery>(new(userId));
+        => await ApiResponseAsync<IEnumerable<ConversationDto>, GetConversationsByUserIdQuery>(new(userId));
 }

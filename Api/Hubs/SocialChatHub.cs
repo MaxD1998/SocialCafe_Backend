@@ -25,6 +25,6 @@ public class SocialChatHub : BaseHub
             .Select(x => x.User.ConnectionId)
             .Where(x => x != null);
 
-        await Clients.Clients(connectionIds).SendAsync("RecieveMessageHandler");
+        await Clients.Clients(connectionIds).SendAsync("RecieveMessageHandler", result);
     }
 }
