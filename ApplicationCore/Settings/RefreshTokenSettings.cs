@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Settings
+﻿namespace ApplicationCore.Settings;
+
+public class RefreshTokenSettings
 {
-    public class RefreshTokenSettings
-    {
-        public int ExpireTime { get; set; }
-    }
+    public int ExpireTime { get; set; }
 }

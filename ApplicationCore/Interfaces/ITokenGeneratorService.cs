@@ -1,11 +1,10 @@
 ﻿using ApplicationCore.Dtos.User;
 
-namespace ApplicationCore.Interfaces
-{
-    public interface ITokenGeneratorService
-    {
-        string GenerateJwt(UserDto user);
+namespace ApplicationCore.Interfaces;
 
-        Guid GenerateRefreshToken();
-    }
+public interface ITokenGeneratorService
+{
+    string GenerateJwt(UserDto user);
+
+    Guid GenerateRefreshToken();
 }

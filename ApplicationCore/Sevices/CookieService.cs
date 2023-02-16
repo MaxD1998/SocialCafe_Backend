@@ -1,40 +1,39 @@
 ﻿using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace ApplicationCore.Sevices
+namespace ApplicationCore.Sevices;
+
+public class CookieService : ICookieService
 {
-    public class CookieService : ICookieService
+    private readonly IHttpContextAccessor _accessor;
+
+    public CookieService(IHttpContextAccessor accessor)
     {
-        public CookieService(IHttpContextAccessor accessor)
+        _accessor = accessor;
+    }
+
+    public void AddCookie(string name, string value, int expire, bool httpOnly)
+    {
+        var cookie = new CookieOptions()
         {
-            Accessor = accessor;
+            HttpOnly = httpOnly,
+            Expires = DateTime.UtcNow.AddDays(expire),
+            SameSite = SameSiteMode.None,
+            Secure = true,
+        };
+
+        _accessor.HttpContext.Response.Cookies.Append(name, value, cookie);
+    }
+
+    public string GetCookie(string name)
+    {
+        var isValue = _accessor.HttpContext.Request.Cookies.TryGetValue(name, out var value);
+
+        if (isValue)
+        {
+            return value;
         }
 
-        private IHttpContextAccessor Accessor { get; }
-
-        public void AddCookie(string name, string value, int expire)
-        {
-            var cookie = new CookieOptions()
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(expire),
-                SameSite = SameSiteMode.None,
-                Secure = true,
-            };
-
-            Accessor.HttpContext.Response.Cookies.Append(name, value, cookie);
-        }
-
-        public string GetCookie(string name)
-        {
-            var isValue = Accessor.HttpContext.Request.Cookies.TryGetValue(name, out var value);
-
-            if (isValue)
-            {
-                return value;
-            }
-
-            return string.Empty;
-        }
+        return string.Empty;
     }
 }

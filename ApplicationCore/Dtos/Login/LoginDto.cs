@@ -1,9 +1,8 @@
-﻿namespace ApplicationCore.Dtos.Login
-{
-    public class LoginDto
-    {
-        public string Email { get; set; }
+﻿namespace ApplicationCore.Dtos.Login;
 
-        public string Password { get; set; }
-    }
+public class LoginDto
+{
+    public string Email { get; set; }
+
+    public string Password { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace ApplicationCore.Settings
+﻿namespace ApplicationCore.Settings;
+
+public class ConnectionStrings
 {
-    public class ConnectionStrings
-    {
-        public string DbConnectionString { get; set; }
-    }
+    public string DbConnectionString { get; set; }
 }

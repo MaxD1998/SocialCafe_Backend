@@ -1,22 +1,20 @@
 ﻿using Domain.Base;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entity
+namespace Domain.Entity;
+
+public class PostEntity : BaseEntity
 {
-    [Table("Post")]
-    public class PostEntity : BaseEntity
-    {
-        public string Text { get; set; }
+    public string Text { get; set; }
 
-        [Column(Order = 1)]
-        public int UserId { get; set; }
+    [Column(Order = 1)]
+    public int UserId { get; set; }
 
-        #region Related data
+    #region Related data
 
-        public ICollection<CommentEntity> Comments { get; set; }
+    public ICollection<CommentEntity> Comments { get; set; }
 
-        public UserEntity User { get; set; }
+    public UserEntity User { get; set; }
 
-        #endregion Related data
-    }
+    #endregion Related data
 }

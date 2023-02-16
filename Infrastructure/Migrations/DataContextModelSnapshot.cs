@@ -49,7 +49,56 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comment", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConversationEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(0);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Conversation", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConversationMemberEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(0);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("Nick")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("ConversationId", "UserId")
+                        .IsUnique();
+
+                    b.ToTable("ConversationMember", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.FriendEntity", b =>
@@ -74,7 +123,38 @@ namespace Infrastructure.Migrations
                     b.HasIndex("InviterId", "RecipientId")
                         .IsUnique();
 
-                    b.ToTable("Friend");
+                    b.ToTable("Friend", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.MessageEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(0);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConversationId")
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnOrder(3);
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Message", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
@@ -98,7 +178,40 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Post");
+                    b.ToTable("Post", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.RefreshTokenEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnOrder(0);
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("ExpireDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnOrder(1);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("RefreshToken", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.UserEntity", b =>
@@ -109,6 +222,10 @@ namespace Infrastructure.Migrations
                         .HasColumnOrder(0);
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConnectionId")
+                        .HasColumnType("text")
+                        .HasColumnOrder(5);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -138,7 +255,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entity.CommentEntity", b =>
@@ -155,6 +272,25 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entity.ConversationMemberEntity", b =>
+                {
+                    b.HasOne("Domain.Entity.ConversationEntity", "Conversation")
+                        .WithMany("ConversationMembers")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
 
                     b.Navigation("User");
                 });
@@ -178,6 +314,25 @@ namespace Infrastructure.Migrations
                     b.Navigation("Recipient");
                 });
 
+            modelBuilder.Entity("Domain.Entity.MessageEntity", b =>
+                {
+                    b.HasOne("Domain.Entity.ConversationEntity", "Converstaion")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entity.UserEntity", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Converstaion");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
                 {
                     b.HasOne("Domain.Entity.UserEntity", "User")
@@ -189,40 +344,22 @@ namespace Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.Entity.UserEntity", b =>
+            modelBuilder.Entity("Domain.Entity.RefreshTokenEntity", b =>
                 {
-                    b.OwnsMany("Domain.Entity.RefreshTokenEntity", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer")
-                                .HasColumnOrder(0);
+                    b.HasOne("Domain.Entity.UserEntity", "User")
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("Domain.Entity.RefreshTokenEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
+                    b.Navigation("User");
+                });
 
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("timestamp with time zone");
+            modelBuilder.Entity("Domain.Entity.ConversationEntity", b =>
+                {
+                    b.Navigation("ConversationMembers");
 
-                            b1.Property<DateTime>("ExpireDate")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<Guid>("Token")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int?>("UserEntityId")
-                                .HasColumnType("integer");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("UserEntityId");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserEntityId");
-                        });
-
-                    b.Navigation("RefreshTokens");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
@@ -238,7 +375,11 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("InvitedUsers");
 
+                    b.Navigation("Messages");
+
                     b.Navigation("Posts");
+
+                    b.Navigation("RefreshToken");
                 });
 #pragma warning restore 612, 618
         }

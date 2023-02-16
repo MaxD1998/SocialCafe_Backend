@@ -1,27 +1,23 @@
 ﻿using ApplicationCore.Helpers;
 using ApplicationCore.Settings;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
-namespace Infrastructure
+namespace Infrastructure;
+
+public class DataContext : DbContext
 {
-    public class DataContext : DbContext
+    protected override void OnConfiguring(DbContextOptionsBuilder builder)
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder builder)
-        {
-            var config = ConfigHelper.SetConfings();
-            var connectionstring = config.GetConnectionString(nameof(ConnectionStrings.DbConnectionString));
+        var config = ConfigHelper.SetConfings();
+        var connectionstring = config.GetConnectionString(nameof(ConnectionStrings.DbConnectionString));
 
-            builder.UseNpgsql(connectionstring);
-        }
+        builder.UseNpgsql(connectionstring);
+    }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.ApplyConfiguration(new CommentConfig());
-            builder.ApplyConfiguration(new FriendConfig());
-            builder.ApplyConfiguration(new PostConfig());
-            builder.ApplyConfiguration(new UserConfig());
-        }
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

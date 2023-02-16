@@ -1,5 +1,6 @@
-﻿using ApplicationCore.Cqrs.User.Create;
-using ApplicationCore.Cqrs.User.Delete;
+﻿using ApplicationCore.Cqrs.RefreshToken.Create;
+using ApplicationCore.Cqrs.RefreshToken.Get;
+using ApplicationCore.Cqrs.RefreshToken.Update;
 using ApplicationCore.Cqrs.User.Get;
 using ApplicationCore.Dtos;
 using ApplicationCore.Dtos.Login;
@@ -12,104 +13,93 @@ using ApplicationCore.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace ApplicationCore.Sevices
+namespace ApplicationCore.Sevices;
+
+public class AuthenticationService : IAuthenticationService
 {
-    public class AuthenticationService : IAuthenticationService
+    private readonly IMediator _mediator;
+    private readonly IPasswordHasher<UserDto> _passwordHasher;
+    private readonly ISettings _settings;
+    private readonly ITokenGeneratorService _tokenGeneratorService;
+
+    public AuthenticationService(IMediator mediator,
+        IPasswordHasher<UserDto> passwordHasher,
+        ISettings settings,
+        ITokenGeneratorService tokenGeneratorService)
     {
-        public AuthenticationService(IMediator mediator,
-            IPasswordHasher<UserDto> passwordHasher,
-            ISettings settings,
-            ITokenGeneratorService tokenGeneratorService)
+        _mediator = mediator;
+        _passwordHasher = passwordHasher;
+        _settings = settings;
+        _tokenGeneratorService = tokenGeneratorService;
+    }
+
+    public async Task<AuthorizeDto> GetAuthorizationAsync(LoginDto dto)
+    {
+        var user = await _mediator.Send(new GetUserByEmailQuery(dto.Email));
+
+        return await GetAuthorizationAsync(user, dto.Password);
+    }
+
+    public async Task<AuthorizeDto> GetAuthorizationAsync(UserDto dto, string password)
+    {
+        CheckLoginData(dto, password);
+
+        var refreshToken = await AddOrUpdateRefreshTokenAsync(dto.Id);
+
+        return new AuthorizeDto()
         {
-            Mediator = mediator;
-            PasswordHasher = passwordHasher;
-            Settings = settings;
-            TokenGeneratorService = tokenGeneratorService;
+            Id = dto.Id,
+            Username = $"{dto.FirstName} {dto.LastName}",
+            Token = _tokenGeneratorService.GenerateJwt(dto),
+            RefreshToken = refreshToken
+        };
+    }
+
+    public async Task<AuthorizeDto> GetAuthorizationAsync(Guid token)
+    {
+        var refreshToken = await _mediator.Send(new GetRefereshTokenByTokenQuery(token));
+
+        refreshToken.ThrowIfNull(new ForbiddenException(ErrorMessages.SessionWasExpired));
+
+        var user = refreshToken.User;
+
+        return new AuthorizeDto()
+        {
+            Id = user.Id,
+            Username = $"{user.FirstName} {user.LastName}",
+            Token = _tokenGeneratorService.GenerateJwt(user),
+        };
+    }
+
+    private async Task<Guid> AddOrUpdateRefreshTokenAsync(int userId)
+    {
+        var inputRefreshToken = new RefreshTokenInputDto()
+        {
+            CreationDate = DateTime.UtcNow,
+            ExpireDate = DateTime.UtcNow.AddDays(_settings.GetRefreshTokenExpireDays()),
+            Token = _tokenGeneratorService.GenerateRefreshToken(),
+            UserId = userId,
+        };
+
+        var oldRefreshToken = await _mediator.Send(new GetRefreshTokenByUserIdQuery(userId));
+
+        if (oldRefreshToken is null)
+        {
+            var newRefreshToken = await _mediator.Send(new CreateRefreshTokenCommand(inputRefreshToken));
+            return newRefreshToken.Token;
         }
 
-        private IMediator Mediator { get; }
+        var updatedRefreshToken = await _mediator.Send(new UpdateRefreshTokenCommand(oldRefreshToken.Id, inputRefreshToken));
+        return updatedRefreshToken.Token;
+    }
 
-        private IPasswordHasher<UserDto> PasswordHasher { get; }
+    private void CheckLoginData(UserDto dto, string password)
+    {
+        dto.ThrowIfNull(new UnauthorizeException(ErrorMessages.WrongEmailOrPassword));
 
-        private ISettings Settings { get; }
+        var passwordVerfication = _passwordHasher.VerifyHashedPassword(dto, dto?.HashedPassword, password);
 
-        private ITokenGeneratorService TokenGeneratorService { get; }
-
-        public async Task<AuthorizeDto> GetAuthorizationAsync(LoginDto dto)
-        {
-            var user = await Mediator.Send(new GetUserByEmailQuery(dto.Email));
-
-            return await GetAuthorizationAsync(user, dto.Password);
-        }
-
-        public async Task<AuthorizeDto> GetAuthorizationAsync(UserDto dto, string password)
-        {
-            CheckLoginData(dto, password);
-
-            var refreshToken = await GetRefreshTokenAsync(dto);
-
-            return new AuthorizeDto()
-            {
-                Username = $"{dto.FirstName} {dto.LastName}",
-                Token = TokenGeneratorService.GenerateJwt(dto),
-                RefreshToken = refreshToken
-            };
-        }
-
-        public async Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken)
-        {
-            var user = await Mediator.Send(new GetUserByRefreshTokenQuery(refreshToken));
-
-            user.ThrowIfNull(new UnauthorizeException(ErrorMessages.SessionWasExpired));
-
-            return new AuthorizeDto()
-            {
-                Username = $"{user.FirstName} {user.LastName}",
-                Token = TokenGeneratorService.GenerateJwt(user),
-            };
-        }
-
-        private async Task<Guid> AddRefreshTokenAsync(UserDto dto)
-        {
-            var newRefreshToken = new RefreshTokenInputDto()
-            {
-                CreationDate = DateTime.UtcNow,
-                ExpireDate = DateTime.UtcNow.AddDays(Settings.GetRefreshTokenExpireDays()),
-                Token = TokenGeneratorService.GenerateRefreshToken(),
-            };
-
-            var createUserResponse = await Mediator.Send(new CreateRefreshTokenCommand(dto.Id, newRefreshToken));
-            var createdRefreshToken = createUserResponse.RefreshTokens
-                .LastOrDefault();
-
-            return createdRefreshToken.Token;
-        }
-
-        private void CheckLoginData(UserDto dto, string password)
-        {
-            dto.ThrowIfNull(new UnauthorizeException(ErrorMessages.WrongEmailOrPassword));
-
-            var passwordVerfication = PasswordHasher.VerifyHashedPassword(dto, dto?.HashedPassword, password);
-
-            if (passwordVerfication == PasswordVerificationResult.Failed)
-            {
-                throw new UnauthorizeException(ErrorMessages.WrongEmailOrPassword);
-            }
-        }
-
-        private async Task<bool> DeleteOldRefreshTokens(UserDto dto)
-        {
-            var oldRefreshTokens = dto.RefreshTokens
-                .Where(x => x.ExpireDate < DateTime.UtcNow)
-                .ToList();
-
-            return await Mediator.Send(new DeleteRefreshTokensCommand(dto.Id, oldRefreshTokens));
-        }
-
-        private async Task<Guid> GetRefreshTokenAsync(UserDto dto)
-        {
-            await DeleteOldRefreshTokens(dto);
-            return await AddRefreshTokenAsync(dto);
-        }
+        if (passwordVerfication == PasswordVerificationResult.Failed)
+            throw new UnauthorizeException(ErrorMessages.WrongEmailOrPassword);
     }
 }

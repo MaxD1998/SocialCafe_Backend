@@ -5,17 +5,16 @@ using AutoMapper;
 using Domain.Entity;
 using MediatR;
 
-namespace ApplicationCore.Cqrs.User.Get
+namespace ApplicationCore.Cqrs.User.Get;
+
+public record GetUsersQuery() : IRequest<IEnumerable<UserDto>>;
+
+public class GetUsersQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersQuery, IEnumerable<UserDto>>
 {
-    public record GetUsersQuery() : IRequest<IEnumerable<UserDto>>;
-
-    public class GetUsersQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersQuery, IEnumerable<UserDto>>
+    public GetUsersQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
-        public GetUsersQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
-        {
-        }
-
-        public async Task<IEnumerable<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
-            => await GetAllAsync<UserEntity, UserDto>();
     }
+
+    public async Task<IEnumerable<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+        => await GetAllAsync<UserEntity, UserDto>();
 }

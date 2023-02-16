@@ -2,17 +2,24 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Bases
-{
-    [ApiController]
-    [Route("[controller]")]
-    public abstract class BaseApiController : ControllerBase
-    {
-        public BaseApiController(IMediator mediator)
-        {
-            Mediator = mediator;
-        }
+namespace Api.Bases;
 
-        protected IMediator Mediator { get; }
+[ApiController]
+[Authorize]
+[Route("[controller]")]
+public abstract class BaseApiController : ControllerBase
+{
+    protected readonly IMediator _mediator;
+
+    public BaseApiController(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    protected async Task<ActionResult<TResult>> ApiResponseAsync<TResult, TRequest>(TRequest request) where TRequest : notnull, IBaseRequest
+    {
+        var result = await _mediator.Send(request);
+
+        return Ok(result);
     }
 }

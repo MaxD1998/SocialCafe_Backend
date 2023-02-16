@@ -2,14 +2,13 @@
 using ApplicationCore.Dtos.Login;
 using ApplicationCore.Dtos.User;
 
-namespace ApplicationCore.Interfaces
+namespace ApplicationCore.Interfaces;
+
+public interface IAuthenticationService
 {
-    public interface IAuthenticationService
-    {
-        Task<AuthorizeDto> GetAuthorizationAsync(LoginDto loginDto);
+    Task<AuthorizeDto> GetAuthorizationAsync(LoginDto loginDto);
 
-        Task<AuthorizeDto> GetAuthorizationAsync(UserDto entity, string password);
+    Task<AuthorizeDto> GetAuthorizationAsync(UserDto entity, string password);
 
-        Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken);
-    }
+    Task<AuthorizeDto> GetAuthorizationAsync(Guid refreshToken);
 }

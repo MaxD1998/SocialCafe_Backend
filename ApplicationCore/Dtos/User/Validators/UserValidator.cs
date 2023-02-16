@@ -1,6 +1,5 @@
-﻿namespace ApplicationCore.Dtos.User.Validators
+﻿namespace ApplicationCore.Dtos.User.Validators;
+
+public class UserValidator : BaseUserValidator<UserInputDto>
 {
-    public class UserValidator : BaseUserValidator<UserInputDto>
-    {
-    }
 }

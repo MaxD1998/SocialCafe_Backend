@@ -1,23 +1,22 @@
 ﻿using Domain.Entity;
-using Microsoft.EntityFrameworkCore;
+using Infrastructure.Bases;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations
+namespace Infrastructure.Configurations;
+
+public class FriendConfig : BaseConfig<FriendEntity>
 {
-    public class FriendConfig : IEntityTypeConfiguration<FriendEntity>
+    protected override void ConfigureEntity(EntityTypeBuilder<FriendEntity> builder)
     {
-        public void Configure(EntityTypeBuilder<FriendEntity> builder)
-        {
-            builder.HasOne(x => x.Inviter)
-                .WithMany(x => x.InvitedUsers)
-                .HasForeignKey(x => x.InviterId);
+        builder.HasOne(x => x.Inviter)
+            .WithMany(x => x.InvitedUsers)
+            .HasForeignKey(x => x.InviterId);
 
-            builder.HasOne(x => x.Recipient)
-                .WithMany(x => x.InvitedByUsers)
-                .HasForeignKey(x => x.RecipientId);
+        builder.HasOne(x => x.Recipient)
+            .WithMany(x => x.InvitedByUsers)
+            .HasForeignKey(x => x.RecipientId);
 
-            builder.HasIndex(x => new { x.InviterId, x.RecipientId })
-                .IsUnique();
-        }
+        builder.HasIndex(x => new { x.InviterId, x.RecipientId })
+            .IsUnique();
     }
 }

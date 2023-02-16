@@ -1,11 +1,8 @@
 ﻿using ApplicationCore.Interfaces.Repositories;
 
-namespace Infrastructure.Repositories
-{
-    public class UnitOfWork : IUnitOfWork
-    {
-        public IBaseRepository BaseRepository => new BaseRepository();
+namespace Infrastructure.Repositories;
 
-        public IUserRepository UserRepository => new UserRepository();
-    }
+public class UnitOfWork : IUnitOfWork
+{
+    public IBaseRepository BaseRepository => new BaseRepository();
 }

@@ -5,36 +5,23 @@ using ApplicationCore.Dtos.Post;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers
+namespace Api.Controllers;
+
+public class PostController : BaseApiController
 {
-    public class PostController : BaseApiController
+    public PostController(IMediator mediator) : base(mediator)
     {
-        public PostController(IMediator mediator) : base(mediator)
-        {
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<PostDto>> CreatePostAsync([FromBody] PostInputDto dto)
-        {
-            var result = await Mediator.Send(new CreatePostCommand(dto));
-
-            return Ok(result);
-        }
-
-        [HttpGet("{postId}")]
-        public async Task<ActionResult<PostDto>> GetPostByIdAsync([FromRoute] int postId)
-        {
-            var result = await Mediator.Send(new GetPostByIdQuery(postId));
-
-            return Ok(result);
-        }
-
-        [HttpGet("UserId/{userId}")]
-        public async Task<ActionResult<IEnumerable<PostDto>>> GetPostsByUserIdAsync([FromRoute] int userId)
-        {
-            var result = await Mediator.Send(new GetPostsByUserIdQuery(userId));
-
-            return Ok(result);
-        }
     }
+
+    [HttpPost]
+    public async Task<ActionResult<PostDto>> CreateAsync([FromBody] PostInputDto dto)
+        => await ApiResponseAsync<PostDto, CreatePostCommand>(new(dto));
+
+    [HttpGet("{postId}")]
+    public async Task<ActionResult<PostDto>> GetByIdAsync([FromRoute] int postId)
+        => await ApiResponseAsync<PostDto, GetPostByIdQuery>(new(postId));
+
+    [HttpGet("UserId/{userId}")]
+    public async Task<ActionResult<IEnumerable<PostDto>>> GetsByUserIdAsync([FromRoute] int userId)
+        => await ApiResponseAsync<IEnumerable<PostDto>, GetPostsByUserIdQuery>(new(userId));
 }

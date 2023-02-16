@@ -5,28 +5,19 @@ using ApplicationCore.Dtos.Friend;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Controllers
+namespace Api.Controllers;
+
+public class FriendController : BaseApiController
 {
-    public class FriendController : BaseApiController
+    public FriendController(IMediator mediator) : base(mediator)
     {
-        public FriendController(IMediator mediator) : base(mediator)
-        {
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<FriendDto>> CreateFriendAsync([FromBody] FriendInputDto dto)
-        {
-            var result = await Mediator.Send(new CreateFriendCommand(dto));
-
-            return Ok(result);
-        }
-
-        [HttpGet("UserId/{userId}")]
-        public async Task<ActionResult<IEnumerable<FriendDto>>> CreateFriendsByUserIdAsync([FromRoute] int userId)
-        {
-            var result = await Mediator.Send(new GetFriendsByUserIdQuery(userId));
-
-            return Ok(result);
-        }
     }
+
+    [HttpPost]
+    public async Task<ActionResult<FriendDto>> CreateAsync([FromBody] FriendInputDto dto)
+        => await ApiResponseAsync<FriendDto, CreateFriendCommand>(new(dto));
+
+    [HttpGet("UserId/{userId}")]
+    public async Task<ActionResult<IEnumerable<FriendDto>>> GetsByUserIdAsync([FromRoute] int userId)
+        => await ApiResponseAsync<IEnumerable<FriendDto>, GetFriendsByUserIdQuery>(new(userId));
 }

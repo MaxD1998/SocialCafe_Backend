@@ -13,6 +13,19 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Conversation",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversation", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -21,11 +34,39 @@ namespace Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    HashedPassword = table.Column<string>(type: "text", nullable: false)
+                    HashedPassword = table.Column<string>(type: "text", nullable: false),
+                    ConnectionId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_User", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConversationMember",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ConversationId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Nick = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConversationMember", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConversationMember_Conversation_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConversationMember_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,6 +90,33 @@ namespace Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Friend_User_RecipientId",
                         column: x => x.RecipientId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Message",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ConversationId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Text = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Message", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Message_Conversation_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversation",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Message_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -80,17 +148,17 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ExpireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Token = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserEntityId = table.Column<int>(type: "integer", nullable: true)
+                    Token = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RefreshToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RefreshToken_User_UserEntityId",
-                        column: x => x.UserEntityId,
+                        name: "FK_RefreshToken_User_UserId",
+                        column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -134,6 +202,17 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConversationMember_ConversationId_UserId",
+                table: "ConversationMember",
+                columns: new[] { "ConversationId", "UserId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConversationMember_UserId",
+                table: "ConversationMember",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Friend_InviterId_RecipientId",
                 table: "Friend",
                 columns: new[] { "InviterId", "RecipientId" },
@@ -145,14 +224,31 @@ namespace Infrastructure.Migrations
                 column: "RecipientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Message_ConversationId",
+                table: "Message",
+                column: "ConversationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Message_UserId",
+                table: "Message",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",
                 table: "Post",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_UserEntityId",
+                name: "IX_RefreshToken_Token",
                 table: "RefreshToken",
-                column: "UserEntityId");
+                column: "Token",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_UserId",
+                table: "RefreshToken",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
@@ -168,13 +264,22 @@ namespace Infrastructure.Migrations
                 name: "Comment");
 
             migrationBuilder.DropTable(
+                name: "ConversationMember");
+
+            migrationBuilder.DropTable(
                 name: "Friend");
+
+            migrationBuilder.DropTable(
+                name: "Message");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
                 name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "Conversation");
 
             migrationBuilder.DropTable(
                 name: "User");

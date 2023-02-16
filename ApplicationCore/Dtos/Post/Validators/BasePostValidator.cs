@@ -1,15 +1,14 @@
 ﻿using FluentValidation;
 
-namespace ApplicationCore.Dtos.Post.Validators
+namespace ApplicationCore.Dtos.Post.Validators;
+
+public class BasePostValidator<T> : AbstractValidator<T> where T : PostInputDto
 {
-    public class BasePostValidator<T> : AbstractValidator<T> where T : PostInputDto
+    public BasePostValidator()
     {
-        public BasePostValidator()
-        {
-            RuleFor(x => x.Text)
-                .NotEmpty();
-            RuleFor(x => x.UserId)
-                .NotEmpty();
-        }
+        RuleFor(x => x.Text)
+            .NotEmpty();
+        RuleFor(x => x.UserId)
+            .NotEmpty();
     }
 }

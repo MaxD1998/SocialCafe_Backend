@@ -1,6 +1,12 @@
-﻿namespace ApplicationCore.Dtos.Friend
+﻿using ApplicationCore.Dtos.User;
+
+namespace ApplicationCore.Dtos.Friend;
+
+public class FriendDto
 {
-    public class FriendDto : FriendInputDto
-    {
-    }
+    public UserDto User { get; set; }
+
+    public int UserId { get; set; }
+
+    public int Id { get; set; }
 }

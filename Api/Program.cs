@@ -1,4 +1,5 @@
 using Api.Extensions;
+using Api.Hubs;
 using Api.Middlewares;
 using ApplicationCore;
 using ApplicationCore.Dtos.User;
@@ -12,6 +13,7 @@ using FluentValidation.AspNetCore;
 using Infrastructure;
 using Infrastructure.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,10 +39,12 @@ service.AddJwtAuthentication(settings);
 service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
+service.AddScoped<IChatService, ChatService>();
 service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 service.AddScoped<IUnitOfWork, UnitOfWork>();
 
+service.AddSignalR();
 service.AddEndpointsApiExplorer();
 service.AddSwaggerGen();
 
@@ -55,9 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseRouting();
-
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
@@ -65,11 +67,13 @@ app.UseCors(x => x
     .WithOrigins("http://localhost:4200"));
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
+app.MapHub<SocialChatHub>("/SocialChat", opt =>
+{
+    opt.Transports = HttpTransportType.WebSockets;
+});
 app.MapControllers();
 
 var scope = app.Services.CreateScope();
