@@ -1,4 +1,4 @@
-using Api.Extensions;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

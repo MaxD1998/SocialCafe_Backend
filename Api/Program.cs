@@ -34,6 +34,7 @@ service.AddValidatorsFromAssembly(typeof(ApplicationCoreAssembly).Assembly);
 service.AddDbContext<DataContext>();
 service.AddMediatR(typeof(ApplicationCoreAssembly).Assembly);
 service.AddAutoMapper(typeof(ApplicationCoreAssembly).Assembly);
+service.AddAutoMapperProfiles();
 service.AddJwtAuthentication(settings);
 
 service.AddScoped<ErrorHandlingMiddleware>();

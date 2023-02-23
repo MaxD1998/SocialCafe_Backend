@@ -1,6 +1,8 @@
-﻿namespace ApplicationCore.Dtos.Conversation;
+﻿using ApplicationCore.Dtos.ConversationMember;
 
-public class ConversationInputDto
+namespace ApplicationCore.Dtos.Conversation;
+
+public class ConversationInputDto : ConversationBaseDto
 {
-    public string Name { get; set; }
+    public List<ConversationMemberInputDto> ConversationMembers { get; set; }
 }

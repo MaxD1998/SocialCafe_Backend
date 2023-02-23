@@ -34,8 +34,8 @@ public abstract class BaseRequestHandler
         return _mapper.Map<IEnumerable<TResult>>(results);
     }
 
-    protected async Task<bool> DeleteAsync<TEntity>(int id) where TEntity : BaseEntity
-        => await _unitOfWork.BaseRepository.DeleteAsync<TEntity>(id);
+    protected async Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity
+        => await _unitOfWork.BaseRepository.DeleteAsync(expression);
 
     protected async Task<IEnumerable<TResult>> GetAllAsync<TEntity, TResult>(bool disableAutoInclude = false) where TEntity : BaseEntity
     {

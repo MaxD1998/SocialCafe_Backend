@@ -43,15 +43,15 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         return entities;
     }
 
-    public async Task<bool> DeleteAsync<T>(int id) where T : BaseEntity
+    public async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
     {
         using var context = new DataContext();
 
         var result = await context.Set<T>()
-            .FirstOrDefaultAsync(x => x.Id.Equals(id));
+            .FirstOrDefaultAsync(expression);
 
         if (result is null)
-            return false;
+            throw new NotFoundException();
 
         context.Set<T>()
             .Remove(result);
@@ -107,21 +107,16 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
     {
         using var context = new DataContext();
 
-        var record = await context.Set<T>()
+        var result = await context.Set<T>()
             .IgnoreAutoIncludes()
             .FirstOrDefaultAsync(x => x.Id.Equals(id));
 
-        record.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
-        Map(entity, record);
-
-        var result = context.Set<T>()
-            .Update(record);
+        result.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
+        Map(entity, result);
 
         await context.SaveChangesAsync();
 
-        return await context.Set<T>()
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
+        return result;
     }
 
     public async Task<IEnumerable<T>> UpdateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
@@ -129,24 +124,21 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         using var context = new DataContext();
 
         var ids = entities.Select(x => x.Id);
-        var records = await context.Set<T>()
+        var results = await context.Set<T>()
             .IgnoreAutoIncludes()
             .Where(x => ids.Contains(x.Id))
             .ToListAsync();
 
-        records.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));
+        results.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));
 
-        foreach (var record in records)
+        foreach (var result in results)
         {
-            var entity = entities.FirstOrDefault(x => x.Id.Equals(record.Id));
-            Map(entity, record);
+            var entity = entities.FirstOrDefault(x => x.Id.Equals(result.Id));
+            Map(entity, result);
         }
-
-        context.Set<T>()
-            .UpdateRange(records);
 
         await context.SaveChangesAsync();
 
-        return entities;
+        return results;
     }
 }
