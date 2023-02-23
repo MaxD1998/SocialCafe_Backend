@@ -17,9 +17,5 @@ public abstract class BaseApiController : ControllerBase
     }
 
     protected async Task<ActionResult<TResult>> ApiResponseAsync<TResult, TRequest>(TRequest request) where TRequest : notnull, IBaseRequest
-    {
-        var result = await _mediator.Send(request);
-
-        return Ok(result);
-    }
+        => Ok(await _mediator.Send(request));
 }

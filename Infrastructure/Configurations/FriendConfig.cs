@@ -18,5 +18,11 @@ public class FriendConfig : BaseConfig<FriendEntity>
 
         builder.HasIndex(x => new { x.InviterId, x.RecipientId })
             .IsUnique();
+
+        builder.Navigation(x => x.Inviter)
+            .AutoInclude();
+
+        builder.Navigation(x => x.Recipient)
+            .AutoInclude();
     }
 }

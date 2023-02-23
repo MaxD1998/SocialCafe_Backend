@@ -11,7 +11,7 @@ public interface IBaseRepository
 
     Task<IEnumerable<T>> CreateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity;
 
-    Task<bool> DeleteAsync<T>(int id) where T : BaseEntity;
+    Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity;
 
     Task<IEnumerable<T>> GetAllAsync<T>(bool disableAutoInclude = false) where T : BaseEntity;
 

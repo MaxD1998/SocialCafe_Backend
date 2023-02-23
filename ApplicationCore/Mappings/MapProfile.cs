@@ -7,19 +7,28 @@ using ApplicationCore.Dtos.Message;
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Dtos.RefreshToken;
 using ApplicationCore.Dtos.User;
+using ApplicationCore.Extensions;
 using AutoMapper;
 using Domain.Entity;
+using Microsoft.AspNetCore.Http;
 
 namespace ApplicationCore.Mappings;
 
 public class MapProfile : Profile
 {
-    public MapProfile()
+    private readonly int _userId;
+
+    public MapProfile(IHttpContextAccessor httpContextAccessor)
     {
+        _userId = InitUserId(httpContextAccessor);
+
         //Entity to Dto
         CreateMap<CommentEntity, CommentDto>();
         CreateMap<ConversationEntity, ConversationDto>();
         CreateMap<ConversationMemberEntity, ConversationMemberDto>();
+        CreateMap<FriendEntity, FriendDto>()
+            .ForMember(x => x.UserId, map => map.MapFrom(x => x.InviterId != _userId ? x.InviterId : x.RecipientId))
+            .ForMember(x => x.User, map => map.MapFrom(x => x.InviterId != _userId ? x.Inviter : x.Recipient));
         CreateMap<MessageEntity, MessageDto>();
         CreateMap<PostEntity, PostDto>();
         CreateMap<RefreshTokenEntity, RefreshTokenDto>();
@@ -41,4 +50,7 @@ public class MapProfile : Profile
             .ForMember(x => x.Password, map => map.MapFrom(x => x.HashedPassword));
         CreateMap<UserDto, UserInputDto>().ReverseMap();
     }
+
+    private int InitUserId(IHttpContextAccessor httpContextAccessor)
+            => httpContextAccessor.HttpContext.User.GetUserId();
 }

@@ -14,14 +14,10 @@ public class UserController : BaseApiController
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUserAsync(int id)
-    {
-        var result = await _mediator.Send(new DeleteUserCommand(id));
+    public async Task<ActionResult<bool>> DeleteAsync(int id)
+        => await ApiResponseAsync<bool, DeleteUserCommand>(new(id));
 
-        return result ? Ok() : NotFound();
-    }
-
-    [HttpGet("ByEmail")]
+    [HttpGet("Email")]
     public async Task<ActionResult<UserDto>> GetByEmailAsync([FromQuery] string email)
         => await ApiResponseAsync<UserDto, GetUserByEmailQuery>(new(email));
 
@@ -29,7 +25,7 @@ public class UserController : BaseApiController
     public async Task<ActionResult<IEnumerable<UserDto>>> GetsAsync()
         => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersQuery>(new());
 
-    [HttpGet("ByFirstNameAndLastName")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetsByFirstNameAndLastNameAsync([FromQuery] string firstName, [FromQuery] string lastName)
-        => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersByFirstNameAndLastNameQuery>(new(firstName, lastName));
+    [HttpGet("NamesExceptUserFriends")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetsByNamesExceptUserFriendsAsync([FromQuery] string firstName, [FromQuery] string lastName)
+        => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersByNamesExceptUserFriendsQuery>(new(firstName ?? string.Empty, lastName ?? string.Empty));
 }
