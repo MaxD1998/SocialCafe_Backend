@@ -53,19 +53,25 @@ public class AuthorizationController : BaseApiController
     }
 
     [HttpPost("Login")]
-    public async Task<ActionResult<AuthorizeDto>> LoginAsync(LoginDto dto)
+    public async Task<ActionResult<AuthorizeDto>> LoginAsync([FromBody] LoginDto dto)
     {
         var result = await _authorizationService.GetAuthorizationAsync(dto);
         var expireDays = _settings.GetRefreshTokenExpireDays();
 
-        _cookieService.AddCookie(CookieNameConst.Id, result.Id.ToString(), expireDays, false);
         _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays, true);
 
         return Ok(result);
     }
 
+    [HttpPost("Logout")]
+    public IActionResult Logout()
+    {
+        _cookieService.RemoveCookie(CookieNameConst.RefreshToken);
+        return Ok();
+    }
+
     [HttpPost("Register")]
-    public async Task<ActionResult<AuthorizeDto>> RegisterAsync(RegisterDto registerDto)
+    public async Task<ActionResult<AuthorizeDto>> RegisterAsync([FromBody] RegisterDto registerDto)
     {
         var dto = _mapper.Map<UserDto>(registerDto);
 
@@ -75,7 +81,6 @@ public class AuthorizationController : BaseApiController
         var result = await _authorizationService.GetAuthorizationAsync(user, registerDto.Password);
         var expireDays = _settings.GetRefreshTokenExpireDays();
 
-        _cookieService.AddCookie(CookieNameConst.Id, result.Id.ToString(), expireDays, false);
         _cookieService.AddCookie(CookieNameConst.RefreshToken, result.RefreshToken.ToString(), expireDays, true);
 
         return Ok(result);

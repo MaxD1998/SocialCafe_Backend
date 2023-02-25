@@ -36,4 +36,7 @@ public class CookieService : ICookieService
 
         return string.Empty;
     }
+
+    public void RemoveCookie(string name)
+        => _accessor.HttpContext.Response.Cookies.Delete(name);
 }
