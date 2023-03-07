@@ -7,7 +7,7 @@ public class PostDto : PostInputDto
 {
     public List<CommentDto> Comments { get; set; }
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public UserDto User { get; set; }
 }

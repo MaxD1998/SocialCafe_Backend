@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.Comment.Get;
 
 public record GetCommentsByPostIdQuery(int PostId) : IRequest<IEnumerable<CommentDto>>;
 
-public class GetCommentsByPostIdQueryHandler : BaseRequestHandler, IRequestHandler<GetCommentsByPostIdQuery, IEnumerable<CommentDto>>
+internal class GetCommentsByPostIdQueryHandler : BaseRequestHandler, IRequestHandler<GetCommentsByPostIdQuery, IEnumerable<CommentDto>>
 {
     public GetCommentsByPostIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

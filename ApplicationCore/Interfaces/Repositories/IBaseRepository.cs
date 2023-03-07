@@ -19,7 +19,7 @@ public interface IBaseRepository
 
     Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression, bool disableAutoInclude = false) where T : BaseEntity;
 
-    Task<T> UpdateAsync<T>(int id, T entity) where T : BaseEntity;
+    Task<T> UpdateAsync<T>(Guid id, T entity) where T : BaseEntity;
 
     Task<IEnumerable<T>> UpdateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity;
 }

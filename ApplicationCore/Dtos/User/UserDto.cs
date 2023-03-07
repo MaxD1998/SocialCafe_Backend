@@ -5,7 +5,7 @@ namespace ApplicationCore.Dtos.User;
 
 public class UserDto : UserInputDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [JsonIgnore]
     public List<RefreshTokenDto> RefreshTokens { get; set; }

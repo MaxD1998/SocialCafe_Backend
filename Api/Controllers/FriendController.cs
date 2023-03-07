@@ -19,10 +19,10 @@ public class FriendController : BaseApiController
         => await ApiResponseAsync<FriendDto, CreateFriendCommand>(new(dto));
 
     [HttpDelete("UserFriend/{id}")]
-    public async Task<ActionResult<bool>> DeleteUserFriendAsync([FromRoute] int id)
+    public async Task<ActionResult<bool>> DeleteUserFriendAsync([FromRoute] Guid id)
         => await ApiResponseAsync<bool, DeleteUserFriendCommand>(new(id));
 
     [HttpGet("UserId/{userId}")]
-    public async Task<ActionResult<IEnumerable<FriendDto>>> GetsByUserIdAsync([FromRoute] int userId)
+    public async Task<ActionResult<IEnumerable<FriendDto>>> GetsByUserIdAsync([FromRoute] Guid userId)
         => await ApiResponseAsync<IEnumerable<FriendDto>, GetFriendsByUserIdQuery>(new(userId));
 }

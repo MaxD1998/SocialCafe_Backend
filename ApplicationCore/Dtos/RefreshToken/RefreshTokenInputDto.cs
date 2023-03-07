@@ -8,5 +8,5 @@ public class RefreshTokenInputDto
 
     public Guid Token { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 }

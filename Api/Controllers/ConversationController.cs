@@ -18,10 +18,10 @@ public class ConversationController : BaseApiController
         => await ApiResponseAsync<ConversationDto, CreateConversationCommand>(new(dto));
 
     [HttpGet("Id/{id}")]
-    public async Task<ActionResult<ConversationDto>> GetByIdAsync([FromRoute] int id)
+    public async Task<ActionResult<ConversationDto>> GetByIdAsync([FromRoute] Guid id)
         => await ApiResponseAsync<ConversationDto, GetConversationByIdQuery>(new(id));
 
     [HttpGet("UserId/{userId}")]
-    public async Task<ActionResult<IEnumerable<ConversationDto>>> GetsByUserIdAsync([FromRoute] int userId)
+    public async Task<ActionResult<IEnumerable<ConversationDto>>> GetsByUserIdAsync([FromRoute] Guid userId)
         => await ApiResponseAsync<IEnumerable<ConversationDto>, GetConversationsByUserIdQuery>(new(userId));
 }

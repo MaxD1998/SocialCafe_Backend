@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.User.Update;
 
-public record UpdateUserCommand(int Id, UserInputDto Dto) : IRequest<UserDto>;
+public record UpdateUserCommand(Guid Id, UserInputDto Dto) : IRequest<UserDto>;
 
-public class UpdateUserCommandHandler : BaseRequestHandler, IRequestHandler<UpdateUserCommand, UserDto>
+internal class UpdateUserCommandHandler : BaseRequestHandler, IRequestHandler<UpdateUserCommand, UserDto>
 {
     public UpdateUserCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

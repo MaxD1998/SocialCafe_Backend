@@ -16,7 +16,7 @@ namespace ApplicationCore.Mappings;
 
 public class MapProfile : Profile
 {
-    private readonly int _userId;
+    private readonly Guid _userId;
 
     public MapProfile(IHttpContextAccessor httpContextAccessor)
     {
@@ -51,6 +51,6 @@ public class MapProfile : Profile
         CreateMap<UserDto, UserInputDto>().ReverseMap();
     }
 
-    private int InitUserId(IHttpContextAccessor httpContextAccessor)
+    private Guid InitUserId(IHttpContextAccessor httpContextAccessor)
             => httpContextAccessor.HttpContext.User.GetUserId();
 }

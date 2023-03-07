@@ -19,13 +19,13 @@ public class ChatService : IChatService
         _mediator = mediator;
     }
 
-    public async Task<IEnumerable<string>> GetConnectionIds(int userId)
+    public async Task<IEnumerable<string>> GetConnectionIds(Guid userId)
     {
         var friends = await _mediator.Send(new GetFriendsByUserIdQuery(userId));
         return friends.Select(x => x.User.ConnectionId);
     }
 
-    public async Task UpdateUserConnectionId(int userId, string connectionId)
+    public async Task UpdateUserConnectionId(Guid userId, string connectionId)
     {
         var user = await _mediator.Send(new GetUserByIdQuery(userId));
         var userInput = _mapper.Map<UserInputDto>(user);

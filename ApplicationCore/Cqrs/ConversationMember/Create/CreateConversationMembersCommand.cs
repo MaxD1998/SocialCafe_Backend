@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.ConversationMember.Create;
 
 public record CreateConversationMembersCommand(IEnumerable<ConversationMemberInputDto> Dtos) : IRequest<IEnumerable<ConversationMemberDto>>;
 
-public class CreateConversationMembersCommandHandler : BaseRequestHandler, IRequestHandler<CreateConversationMembersCommand, IEnumerable<ConversationMemberDto>>
+internal class CreateConversationMembersCommandHandler : BaseRequestHandler, IRequestHandler<CreateConversationMembersCommand, IEnumerable<ConversationMemberDto>>
 {
     public CreateConversationMembersCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

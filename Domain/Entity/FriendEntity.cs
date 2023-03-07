@@ -4,9 +4,9 @@ namespace Domain.Entity;
 
 public class FriendEntity : BaseEntity
 {
-    public int InviterId { get; set; }
+    public Guid InviterId { get; set; }
 
-    public int RecipientId { get; set; }
+    public Guid RecipientId { get; set; }
 
     #region Related data
 

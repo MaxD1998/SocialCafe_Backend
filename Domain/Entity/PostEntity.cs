@@ -7,8 +7,8 @@ public class PostEntity : BaseEntity
 {
     public string Text { get; set; }
 
-    [Column(Order = 1)]
-    public int UserId { get; set; }
+    [Column(Order = 3)]
+    public Guid UserId { get; set; }
 
     #region Related data
 

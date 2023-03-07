@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.Comment.Create;
 
 public record CreateCommentCommand(CommentInputDto Dto) : IRequest<CommentDto>;
 
-public class CreateCommentCommandHandler : BaseRequestHandler, IRequestHandler<CreateCommentCommand, CommentDto>
+internal class CreateCommentCommandHandler : BaseRequestHandler, IRequestHandler<CreateCommentCommand, CommentDto>
 {
     public CreateCommentCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

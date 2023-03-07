@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.RefreshToken.Get;
 
 public record GetRefereshTokenByTokenQuery(Guid Token) : IRequest<RefreshTokenDto>;
 
-public class GetRefreshTokenByTokenQueryHandle : BaseRequestHandler, IRequestHandler<GetRefereshTokenByTokenQuery, RefreshTokenDto>
+internal class GetRefreshTokenByTokenQueryHandle : BaseRequestHandler, IRequestHandler<GetRefereshTokenByTokenQuery, RefreshTokenDto>
 {
     public GetRefreshTokenByTokenQueryHandle(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

@@ -4,7 +4,7 @@ namespace ApplicationCore.Dtos;
 
 public class AuthorizeDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [JsonIgnore]
     public Guid RefreshToken { get; set; }

@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.Friend.Get;
 
-public record GetFriendsByUserIdQuery(int UserId) : IRequest<IEnumerable<FriendDto>>;
+public record GetFriendsByUserIdQuery(Guid UserId) : IRequest<IEnumerable<FriendDto>>;
 
-public class GetFriendsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetFriendsByUserIdQuery, IEnumerable<FriendDto>>
+internal class GetFriendsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetFriendsByUserIdQuery, IEnumerable<FriendDto>>
 {
     public GetFriendsByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

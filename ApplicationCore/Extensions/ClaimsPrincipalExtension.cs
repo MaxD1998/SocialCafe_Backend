@@ -4,11 +4,11 @@ namespace ApplicationCore.Extensions;
 
 public static class ClaimsPrincipalExtension
 {
-    public static int GetUserId(this ClaimsPrincipal user)
+    public static Guid GetUserId(this ClaimsPrincipal user)
     {
         var id = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        if (int.TryParse(id, out var userId))
+        if (Guid.TryParse(id, out var userId))
             return userId;
 
         return default;

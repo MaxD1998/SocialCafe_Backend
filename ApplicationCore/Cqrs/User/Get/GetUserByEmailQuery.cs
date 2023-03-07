@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.User.Get;
 
 public record GetUserByEmailQuery(string Email) : IRequest<UserDto>;
 
-public class GetUserByEmailQueryHandler : BaseRequestHandler, IRequestHandler<GetUserByEmailQuery, UserDto>
+internal class GetUserByEmailQueryHandler : BaseRequestHandler, IRequestHandler<GetUserByEmailQuery, UserDto>
 {
     public GetUserByEmailQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

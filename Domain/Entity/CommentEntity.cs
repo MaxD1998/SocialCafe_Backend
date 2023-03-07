@@ -5,13 +5,13 @@ namespace Domain.Entity;
 
 public class CommentEntity : BaseEntity
 {
-    [Column(Order = 1)]
-    public int PostId { get; set; }
+    [Column(Order = 3)]
+    public Guid PostId { get; set; }
 
     public string Text { get; set; }
 
-    [Column(Order = 2)]
-    public int? UserId { get; set; }
+    [Column(Order = 4)]
+    public Guid? UserId { get; set; }
 
     #region Related data
 

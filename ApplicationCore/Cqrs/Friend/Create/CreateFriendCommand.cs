@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.Friend.Create;
 
 public record CreateFriendCommand(FriendInputDto Dto) : IRequest<FriendDto>;
 
-public class CreateFriendCommandHandler : BaseRequestHandler, IRequestHandler<CreateFriendCommand, FriendDto>
+internal class CreateFriendCommandHandler : BaseRequestHandler, IRequestHandler<CreateFriendCommand, FriendDto>
 {
     public CreateFriendCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
