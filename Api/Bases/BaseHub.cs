@@ -15,7 +15,7 @@ public abstract class BaseHub : Hub
         _messageService = messageService;
     }
 
-    protected int UserId => Context.GetHttpContext().User.GetUserId();
+    protected Guid UserId => Context.GetHttpContext().User.GetUserId();
 
     public override async Task OnConnectedAsync()
     {

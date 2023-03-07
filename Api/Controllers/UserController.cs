@@ -14,7 +14,7 @@ public class UserController : BaseApiController
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult<bool>> DeleteAsync(int id)
+    public async Task<ActionResult<bool>> DeleteAsync(Guid id)
         => await ApiResponseAsync<bool, DeleteUserCommand>(new(id));
 
     [HttpGet("Email")]

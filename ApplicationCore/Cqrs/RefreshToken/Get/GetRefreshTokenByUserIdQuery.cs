@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.RefreshToken.Get;
 
-public record GetRefreshTokenByUserIdQuery(int UserId) : IRequest<RefreshTokenDto>;
+public record GetRefreshTokenByUserIdQuery(Guid UserId) : IRequest<RefreshTokenDto>;
 
-public class GetRefreshTokenByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetRefreshTokenByUserIdQuery, RefreshTokenDto>
+internal class GetRefreshTokenByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetRefreshTokenByUserIdQuery, RefreshTokenDto>
 {
     public GetRefreshTokenByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

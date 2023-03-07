@@ -6,9 +6,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.User.Delete;
 
-public record DeleteUserCommand(int Id) : IRequest<bool>;
+public record DeleteUserCommand(Guid Id) : IRequest<bool>;
 
-public class DeleteUserCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserCommand, bool>
+internal class DeleteUserCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserCommand, bool>
 {
     public DeleteUserCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

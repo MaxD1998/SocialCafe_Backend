@@ -5,19 +5,19 @@ namespace Domain.Entity;
 
 public class UserEntity : BaseEntity
 {
-    [Column(Order = 5)]
+    [Column(Order = 7)]
     public string ConnectionId { get; set; }
 
     [Column(Order = 3)]
     public string Email { get; set; }
 
-    [Column(Order = 1)]
+    [Column(Order = 5)]
     public string FirstName { get; set; }
 
-    [Column(Order = 4)]
+    [Column(Order = 6)]
     public string HashedPassword { get; set; }
 
-    [Column(Order = 2)]
+    [Column(Order = 4)]
     public string LastName { get; set; }
 
     #region Related data

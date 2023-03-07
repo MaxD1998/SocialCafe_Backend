@@ -103,7 +103,7 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         return await query.ToListAsync();
     }
 
-    public async Task<T> UpdateAsync<T>(int id, T entity) where T : BaseEntity
+    public async Task<T> UpdateAsync<T>(Guid id, T entity) where T : BaseEntity
     {
         using var context = new DataContext();
 

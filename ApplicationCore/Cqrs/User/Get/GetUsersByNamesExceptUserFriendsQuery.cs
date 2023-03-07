@@ -12,9 +12,9 @@ namespace ApplicationCore.Cqrs.User.Get;
 
 public record GetUsersByNamesExceptUserFriendsQuery(string FirstName, string LastName) : IRequest<IEnumerable<UserDto>>;
 
-public class GetUsersByNamesExceptUserFriendsQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersByNamesExceptUserFriendsQuery, IEnumerable<UserDto>>
+internal class GetUsersByNamesExceptUserFriendsQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersByNamesExceptUserFriendsQuery, IEnumerable<UserDto>>
 {
-    private readonly int _userId;
+    private readonly Guid _userId;
 
     public GetUsersByNamesExceptUserFriendsQueryHandler(
         IHttpContextAccessor httpContextAccessor,

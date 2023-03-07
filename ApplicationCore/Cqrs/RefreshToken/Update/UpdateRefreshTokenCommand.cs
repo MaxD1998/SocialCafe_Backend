@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.RefreshToken.Update;
 
-public record UpdateRefreshTokenCommand(int Id, RefreshTokenInputDto Dto) : IRequest<RefreshTokenDto>;
+public record UpdateRefreshTokenCommand(Guid Id, RefreshTokenInputDto Dto) : IRequest<RefreshTokenDto>;
 
-public class UpdateRefreshTokenCommandHandler : BaseRequestHandler, IRequestHandler<UpdateRefreshTokenCommand, RefreshTokenDto>
+internal class UpdateRefreshTokenCommandHandler : BaseRequestHandler, IRequestHandler<UpdateRefreshTokenCommand, RefreshTokenDto>
 {
     public UpdateRefreshTokenCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

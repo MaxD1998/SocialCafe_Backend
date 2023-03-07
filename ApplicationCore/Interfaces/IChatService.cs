@@ -2,7 +2,7 @@
 
 public interface IChatService
 {
-    Task<IEnumerable<string>> GetConnectionIds(int userId);
+    Task<IEnumerable<string>> GetConnectionIds(Guid userId);
 
-    Task UpdateUserConnectionId(int userId, string connectionId);
+    Task UpdateUserConnectionId(Guid userId, string connectionId);
 }

@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.Conversation.Get;
 
-public record GetConversationsByUserIdQuery(int UserId) : IRequest<IEnumerable<ConversationDto>>;
+public record GetConversationsByUserIdQuery(Guid UserId) : IRequest<IEnumerable<ConversationDto>>;
 
-public class GetConversationsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetConversationsByUserIdQuery, IEnumerable<ConversationDto>>
+internal class GetConversationsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetConversationsByUserIdQuery, IEnumerable<ConversationDto>>
 {
     public GetConversationsByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

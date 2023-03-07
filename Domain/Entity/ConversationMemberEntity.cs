@@ -5,13 +5,13 @@ namespace Domain.Entity;
 
 public class ConversationMemberEntity : BaseEntity
 {
-    [Column(Order = 1)]
-    public int ConversationId { get; set; }
+    [Column(Order = 3)]
+    public Guid ConversationId { get; set; }
 
     public string Nick { get; set; }
 
-    [Column(Order = 2)]
-    public int UserId { get; set; }
+    [Column(Order = 4)]
+    public Guid UserId { get; set; }
 
     #region Related data
 

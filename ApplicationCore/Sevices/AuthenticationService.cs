@@ -71,7 +71,7 @@ public class AuthenticationService : IAuthenticationService
         };
     }
 
-    private async Task<Guid> AddOrUpdateRefreshTokenAsync(int userId)
+    private async Task<Guid> AddOrUpdateRefreshTokenAsync(Guid userId)
     {
         var inputRefreshToken = new RefreshTokenInputDto()
         {

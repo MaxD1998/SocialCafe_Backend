@@ -11,8 +11,8 @@ public class RefreshTokenEntity : BaseEntity
 
     public Guid Token { get; set; }
 
-    [Column(Order = 1)]
-    public int UserId { get; set; }
+    [Column(Order = 3)]
+    public Guid UserId { get; set; }
 
     #region Related data
 

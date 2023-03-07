@@ -4,7 +4,7 @@ namespace ApplicationCore.Dtos.Comment;
 
 public class CommentDto : CommentInputDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public UserDto User { get; set; }
 }

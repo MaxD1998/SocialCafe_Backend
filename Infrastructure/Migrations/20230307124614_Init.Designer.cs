@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230214174118_Init")]
+    [Migration("20230307124614_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -27,24 +27,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.CommentEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer")
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(1);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(3);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnOrder(2);
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(4);
 
                     b.HasKey("Id");
 
@@ -57,12 +63,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.ConversationEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(1);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
@@ -75,24 +87,30 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.ConversationMemberEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(3);
 
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("integer")
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(1);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
 
                     b.Property<string>("Nick")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnOrder(2);
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(4);
 
                     b.HasKey("Id");
 
@@ -106,18 +124,24 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.FriendEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(1);
 
-                    b.Property<int>("InviterId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("InviterId")
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid>("RecipientId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -131,25 +155,31 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.MessageEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(3);
 
-                    b.Property<int>("ConversationId")
-                        .HasColumnType("integer")
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(1);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnOrder(3);
+                        .HasColumnOrder(5);
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnOrder(2);
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(4);
 
                     b.HasKey("Id");
 
@@ -162,20 +192,26 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.PostEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(1);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(3);
 
                     b.HasKey("Id");
 
@@ -186,12 +222,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.RefreshTokenEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(1);
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
@@ -199,12 +237,16 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("ExpireDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(2);
+
                     b.Property<Guid>("Token")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnOrder(1);
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnOrder(3);
 
                     b.HasKey("Id");
 
@@ -219,16 +261,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entity.UserEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnOrder(0);
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConnectionId")
                         .HasColumnType("text")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnOrder(1);
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -240,17 +284,21 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
-                        .HasColumnOrder(1);
+                        .HasColumnOrder(5);
 
                     b.Property<string>("HashedPassword")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(6);
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
+                        .HasColumnOrder(4);
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");

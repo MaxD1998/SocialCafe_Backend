@@ -7,9 +7,9 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.User.Get;
 
-public record GetUserByIdQuery(int Id) : IRequest<UserDto>;
+public record GetUserByIdQuery(Guid Id) : IRequest<UserDto>;
 
-public class GetUserByIdQueryHandler : BaseRequestHandler, IRequestHandler<GetUserByIdQuery, UserDto>
+internal class GetUserByIdQueryHandler : BaseRequestHandler, IRequestHandler<GetUserByIdQuery, UserDto>
 {
     public GetUserByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

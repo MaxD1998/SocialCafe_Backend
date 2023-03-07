@@ -61,7 +61,7 @@ public abstract class BaseRequestHandler
         return _mapper.Map<IEnumerable<TResult>>(result);
     }
 
-    protected async Task<TResult> UpdateAsync<TEntity, TResult>(int id, object model) where TEntity : BaseEntity
+    protected async Task<TResult> UpdateAsync<TEntity, TResult>(Guid id, object model) where TEntity : BaseEntity
     {
         var entity = _mapper.Map<TEntity>(model);
         var result = await _unitOfWork.BaseRepository

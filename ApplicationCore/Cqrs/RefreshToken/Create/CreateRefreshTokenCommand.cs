@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.RefreshToken.Create;
 
 public record CreateRefreshTokenCommand(RefreshTokenInputDto Dto) : IRequest<RefreshTokenDto>;
 
-public class CreateRefreshTokenCommandHandler : BaseRequestHandler, IRequestHandler<CreateRefreshTokenCommand, RefreshTokenDto>
+internal class CreateRefreshTokenCommandHandler : BaseRequestHandler, IRequestHandler<CreateRefreshTokenCommand, RefreshTokenDto>
 {
     public CreateRefreshTokenCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

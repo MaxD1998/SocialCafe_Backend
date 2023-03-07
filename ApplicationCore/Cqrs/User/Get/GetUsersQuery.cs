@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.User.Get;
 
 public record GetUsersQuery() : IRequest<IEnumerable<UserDto>>;
 
-public class GetUsersQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersQuery, IEnumerable<UserDto>>
+internal class GetUsersQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersQuery, IEnumerable<UserDto>>
 {
     public GetUsersQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

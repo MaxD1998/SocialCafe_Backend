@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.Message.Create;
 
 public record CreateMessageCommand(MessageInputDto Dto) : IRequest<MessageDto>;
 
-public class CreateMessageCommandHandler : BaseRequestHandler, IRequestHandler<CreateMessageCommand, MessageDto>
+internal class CreateMessageCommandHandler : BaseRequestHandler, IRequestHandler<CreateMessageCommand, MessageDto>
 {
     public CreateMessageCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

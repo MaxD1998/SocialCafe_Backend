@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.Post.Get;
 
 public record GetPostsByUserIdQuery(int UserId) : IRequest<IEnumerable<PostDto>>;
 
-public class GetPostsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetPostsByUserIdQuery, IEnumerable<PostDto>>
+internal class GetPostsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetPostsByUserIdQuery, IEnumerable<PostDto>>
 {
     public GetPostsByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

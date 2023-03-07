@@ -9,7 +9,7 @@ namespace ApplicationCore.Cqrs.User.Create;
 
 public record CreateUserCommand(UserInputDto Dto) : IRequest<UserDto>;
 
-public class CreateUserCommandHandler : BaseRequestHandler, IRequestHandler<CreateUserCommand, UserDto>
+internal class CreateUserCommandHandler : BaseRequestHandler, IRequestHandler<CreateUserCommand, UserDto>
 {
     public CreateUserCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {

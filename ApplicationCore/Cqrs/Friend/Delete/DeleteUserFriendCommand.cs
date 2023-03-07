@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApplicationCore.Cqrs.Friend.Delete;
 
-public record DeleteUserFriendCommand(int Id) : IRequest<bool>;
+public record DeleteUserFriendCommand(Guid Id) : IRequest<bool>;
 
-public class DeleteUserFriendCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserFriendCommand, bool>
+internal class DeleteUserFriendCommandHandler : BaseRequestHandler, IRequestHandler<DeleteUserFriendCommand, bool>
 {
-    private readonly int _userId;
+    private readonly Guid _userId;
 
     public DeleteUserFriendCommandHandler(
         IHttpContextAccessor httpContextAccessor,

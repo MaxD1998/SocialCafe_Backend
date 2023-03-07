@@ -7,7 +7,7 @@ public class ConversationDto : ConversationBaseDto
 {
     public List<ConversationMemberDto> ConversationMembers { get; set; }
 
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public MessageDto Message { get; set; }
 }
