@@ -6,14 +6,24 @@ public class BaseRepositoryMapper
 {
     protected void Map<T>(T source, T dest) where T : BaseEntity
     {
+        var baseProperties = typeof(BaseEntity).GetProperties();
         var properties = typeof(T).GetProperties();
 
         foreach (var property in properties)
         {
-            if (property.Name.Equals(nameof(BaseEntity.Id)))
+            var isBase = false;
+
+            foreach (var baseProperty in baseProperties)
             {
-                continue;
+                if (property.Name.Equals(baseProperty.Name))
+                {
+                    isBase = true;
+                    break;
+                }
             }
+
+            if (isBase)
+                continue;
 
             typeof(T).GetProperty(property.Name)
                 .SetValue(dest, property.GetValue(source));
