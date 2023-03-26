@@ -18,6 +18,6 @@ public class CommentController : BaseApiController
         => await ApiResponseAsync<CommentDto, CreateCommentCommand>(new(dto));
 
     [HttpGet("PostId/{postId}")]
-    public async Task<ActionResult<IEnumerable<CommentDto>>> GetsByPostIdAsync([FromRoute] int postId)
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetsByPostIdAsync([FromRoute] Guid postId)
         => await ApiResponseAsync<IEnumerable<CommentDto>, GetCommentsByPostIdQuery>(new(postId));
 }

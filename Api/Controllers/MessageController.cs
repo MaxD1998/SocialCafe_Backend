@@ -13,6 +13,6 @@ public class MessageController : BaseApiController
     }
 
     [HttpGet("ConversationId/{conversationId}")]
-    public async Task<ActionResult<IEnumerable<MessageDto>>> GetsByConversationIdAsync([FromRoute] int conversationId)
+    public async Task<ActionResult<IEnumerable<MessageDto>>> GetsByConversationIdAsync([FromRoute] Guid conversationId)
         => await ApiResponseAsync<IEnumerable<MessageDto>, GetMessagesByConversationIdQuery>(new(conversationId));
 }

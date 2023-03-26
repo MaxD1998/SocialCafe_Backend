@@ -17,7 +17,7 @@ public class BaseFriendValidator<T> : AbstractValidator<T> where T : FriendInput
             .Custom((value, context) =>
             {
                 var isFriendExist = unitOfWork.BaseRepository
-                    .CheckRecordExist<FriendEntity>(x => (x.InviterId.Equals(value.InviterId) && x.RecipientId.Equals(value.RecipientId))
+                    .IsExist<FriendEntity>(x => (x.InviterId.Equals(value.InviterId) && x.RecipientId.Equals(value.RecipientId))
                         || x.InviterId.Equals(value.RecipientId) && x.RecipientId.Equals(value.RecipientId));
 
                 isFriendExist.Wait();
