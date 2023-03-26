@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.Post.Get;
 
-public record GetPostByIdQuery(int Id) : IRequest<PostDto>;
+public record GetPostByIdQuery(Guid Id) : IRequest<PostDto>;
 
 internal class GetPostByIdQueryHandler : BaseRequestHandler, IRequestHandler<GetPostByIdQuery, PostDto>
 {

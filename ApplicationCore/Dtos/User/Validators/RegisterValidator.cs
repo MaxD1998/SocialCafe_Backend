@@ -12,7 +12,7 @@ public class RegisterValidator : BaseUserValidator<RegisterDto>
             .Custom((value, context) =>
             {
                 var isUserExist = unitOfWork.BaseRepository
-                    .CheckRecordExist<UserEntity>(x => x.Email.ToLower() == value.ToLower());
+                    .IsExist<UserEntity>(x => x.Email.ToLower() == value.ToLower());
 
                 isUserExist.Wait();
 

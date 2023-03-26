@@ -34,8 +34,8 @@ public abstract class BaseRequestHandler
         return _mapper.Map<IEnumerable<TResult>>(results);
     }
 
-    protected async Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> expression) where TEntity : BaseEntity
-        => await _unitOfWork.BaseRepository.DeleteAsync(expression);
+    protected async Task<bool> DeleteAsync<TEntity>(Expression<Func<TEntity, bool>> condition) where TEntity : BaseEntity
+        => await _unitOfWork.BaseRepository.DeleteAsync(condition);
 
     protected async Task<IEnumerable<TResult>> GetAllAsync<TEntity, TResult>(bool disableAutoInclude = false) where TEntity : BaseEntity
     {
@@ -45,21 +45,33 @@ public abstract class BaseRequestHandler
         return _mapper.Map<IEnumerable<TResult>>(results);
     }
 
-    protected async Task<TResult> GetElementAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression, bool disableAutoInclude = false) where TEntity : BaseEntity
+    protected async Task<TResult> GetElementAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> condition, bool disableAutoInclude = false) where TEntity : BaseEntity
     {
         var result = await _unitOfWork.BaseRepository
-            .GetElementAsync(expression, disableAutoInclude);
+            .GetElementAsync(condition, disableAutoInclude);
 
         return _mapper.Map<TResult>(result);
     }
 
-    protected async Task<IEnumerable<TResult>> GetElementsAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> expression, bool disableAutoInclude = false) where TEntity : BaseEntity
+    protected async Task<TResult> GetElementAsync<TEntity, TResult>(
+        Expression<Func<TEntity, bool>> condition,
+        Expression<Func<TEntity, TResult>> selector,
+        bool disableAutoInclude = false) where TEntity : BaseEntity
+        => await _unitOfWork.BaseRepository.GetElementAsync(condition, selector, disableAutoInclude);
+
+    protected async Task<IEnumerable<TResult>> GetElementsAsync<TEntity, TResult>(Expression<Func<TEntity, bool>> condition, bool disableAutoInclude = false) where TEntity : BaseEntity
     {
         var result = await _unitOfWork.BaseRepository
-            .GetElementsAsync(expression, disableAutoInclude);
+            .GetElementsAsync(condition, disableAutoInclude);
 
         return _mapper.Map<IEnumerable<TResult>>(result);
     }
+
+    protected async Task<IEnumerable<TResult>> GetElementsAsync<TEntity, TResult>(
+        Expression<Func<TEntity, bool>> condition,
+        Expression<Func<TEntity, TResult>> selector,
+        bool disableAutoInclude = false) where TEntity : BaseEntity
+        => await _unitOfWork.BaseRepository.GetElementsAsync(condition, selector, disableAutoInclude);
 
     protected async Task<TResult> UpdateAsync<TEntity, TResult>(Guid id, object model) where TEntity : BaseEntity
     {

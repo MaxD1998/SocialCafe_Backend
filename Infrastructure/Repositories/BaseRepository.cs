@@ -9,16 +9,8 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories;
 
-public class BaseRepository : BaseRepositoryMapper, IBaseRepository
+public class BaseRepository : BaseRepositoryTool, IBaseRepository
 {
-    public async Task<bool> CheckRecordExist<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
-    {
-        using var context = new DataContext();
-
-        return await context.Set<T>()
-            .AnyAsync(expression);
-    }
-
     public async Task<T> CreateAsync<T>(T entity) where T : BaseEntity
     {
         using var context = new DataContext();
@@ -43,12 +35,12 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         return entities;
     }
 
-    public async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> expression) where T : BaseEntity
+    public async Task<bool> DeleteAsync<T>(Expression<Func<T, bool>> condition) where T : BaseEntity
     {
         using var context = new DataContext();
 
         var result = await context.Set<T>()
-            .FirstOrDefaultAsync(expression);
+            .FirstOrDefaultAsync(condition);
 
         if (result is null)
             throw new NotFoundException();
@@ -74,42 +66,62 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         return await query.ToListAsync();
     }
 
-    public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> expression,
+    public async Task<T> GetElementAsync<T>(Expression<Func<T, bool>> condition,
         bool disableAutoInclude = false) where T : BaseEntity
     {
         using var context = new DataContext();
+        var query = GetQueryNoTracking(context, condition, disableAutoInclude);
 
-        var query = context.Set<T>()
-            .AsNoTracking();
-
-        if (disableAutoInclude)
-            query = query.IgnoreAutoIncludes();
-
-        return await query.FirstOrDefaultAsync(expression);
+        return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> expression,
+    public async Task<TResult> GetElementAsync<T, TResult>(
+        Expression<Func<T, bool>> condition,
+        Expression<Func<T, TResult>> selector,
         bool disableAutoInclude = false) where T : BaseEntity
     {
         using var context = new DataContext();
+        var query = GetQueryNoTracking(context, condition, disableAutoInclude);
+        var select = query.Select(selector);
 
-        var query = context.Set<T>()
-            .AsNoTracking()
-            .Where(expression);
+        return await select.FirstOrDefaultAsync();
+    }
 
-        if (disableAutoInclude)
-            query = query.IgnoreAutoIncludes();
+    public async Task<IEnumerable<T>> GetElementsAsync<T>(Expression<Func<T, bool>> condition,
+        bool disableAutoInclude = false) where T : BaseEntity
+    {
+        using var context = new DataContext();
+        var query = GetQueryNoTracking(context, condition, disableAutoInclude);
 
         return await query.ToListAsync();
+    }
+
+    public async Task<IEnumerable<TResult>> GetElementsAsync<T, TResult>(
+        Expression<Func<T, bool>> condition,
+        Expression<Func<T, TResult>> selector,
+        bool disableAutoInclude = false) where T : BaseEntity
+    {
+        using var context = new DataContext();
+        var query = GetQueryNoTracking(context, condition, disableAutoInclude);
+        var select = query.Select(selector);
+
+        return await select.ToListAsync();
+    }
+
+    public async Task<bool> IsExist<T>(Expression<Func<T, bool>> condition) where T : BaseEntity
+    {
+        using var context = new DataContext();
+
+        return await context.Set<T>()
+            .AnyAsync(condition);
     }
 
     public async Task<T> UpdateAsync<T>(Guid id, T entity) where T : BaseEntity
     {
         using var context = new DataContext();
-
-        var result = await context.Set<T>()
-            .IgnoreAutoIncludes()
-            .FirstOrDefaultAsync(x => x.Id.Equals(id));
+        var query = GetQuery<T>(context, x => x.Id.Equals(id), true);
+        var result = await query
+            .FirstOrDefaultAsync();
 
         result.ThrowIfNull(new NotFoundException(ErrorMessages.NoDataToUpdate));
         Map(entity, result);
@@ -124,9 +136,8 @@ public class BaseRepository : BaseRepositoryMapper, IBaseRepository
         using var context = new DataContext();
 
         var ids = entities.Select(x => x.Id);
-        var results = await context.Set<T>()
-            .IgnoreAutoIncludes()
-            .Where(x => ids.Contains(x.Id))
+        var query = GetQuery<T>(context, x => ids.Contains(x.Id), true);
+        var results = await query
             .ToListAsync();
 
         results.ThrowIfNullOrEmpty(new NotFoundException(ErrorMessages.NoDataToUpdate));

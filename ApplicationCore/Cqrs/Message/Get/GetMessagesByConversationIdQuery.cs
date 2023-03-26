@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.Message.Get;
 
-public record GetMessagesByConversationIdQuery(int ConversationId) : IRequest<IEnumerable<MessageDto>>;
+public record GetMessagesByConversationIdQuery(Guid ConversationId) : IRequest<IEnumerable<MessageDto>>;
 
 internal class GetMessagesByConversationIdQueryHandler : BaseRequestHandler, IRequestHandler<GetMessagesByConversationIdQuery, IEnumerable<MessageDto>>
 {

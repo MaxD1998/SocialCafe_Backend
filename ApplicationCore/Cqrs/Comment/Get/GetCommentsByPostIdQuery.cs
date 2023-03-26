@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ApplicationCore.Cqrs.Comment.Get;
 
-public record GetCommentsByPostIdQuery(int PostId) : IRequest<IEnumerable<CommentDto>>;
+public record GetCommentsByPostIdQuery(Guid PostId) : IRequest<IEnumerable<CommentDto>>;
 
 internal class GetCommentsByPostIdQueryHandler : BaseRequestHandler, IRequestHandler<GetCommentsByPostIdQuery, IEnumerable<CommentDto>>
 {
