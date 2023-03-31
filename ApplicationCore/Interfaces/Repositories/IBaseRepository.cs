@@ -1,4 +1,4 @@
-﻿using Domain.Base;
+﻿using Domain.Bases;
 using System.Linq.Expressions;
 
 namespace ApplicationCore.Interfaces.Repositories;

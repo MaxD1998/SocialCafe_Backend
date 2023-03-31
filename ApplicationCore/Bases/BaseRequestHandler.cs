@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Base;
+using Domain.Bases;
 using System.Linq.Expressions;
 
 namespace ApplicationCore.Bases;

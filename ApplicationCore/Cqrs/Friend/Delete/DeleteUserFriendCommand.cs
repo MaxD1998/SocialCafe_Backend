@@ -2,7 +2,7 @@
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 

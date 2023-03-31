@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Bases;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 
 namespace ApplicationCore.Cqrs.User.Delete;

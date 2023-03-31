@@ -1,6 +1,6 @@
 ﻿using ApplicationCore.Helpers;
 using ApplicationCore.Settings;
-using Domain.Base;
+using Domain.Bases;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;

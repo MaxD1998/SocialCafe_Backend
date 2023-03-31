@@ -2,7 +2,7 @@
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Repositories;
 using ApplicationCore.Resources;
-using Domain.Base;
+using Domain.Bases;
 using Infrastructure.Bases;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;

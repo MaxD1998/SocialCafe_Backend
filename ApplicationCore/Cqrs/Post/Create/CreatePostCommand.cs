@@ -2,7 +2,7 @@
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 
 namespace ApplicationCore.Cqrs.Post.Create;

@@ -9,7 +9,7 @@ using ApplicationCore.Dtos.RefreshToken;
 using ApplicationCore.Dtos.User;
 using ApplicationCore.Extensions;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace ApplicationCore.Mappings;

@@ -1,5 +1,5 @@
 ﻿using ApplicationCore.Interfaces.Repositories;
-using Domain.Entity;
+using Domain.Entities;
 using FluentValidation;
 
 namespace ApplicationCore.Dtos.User.Validators;

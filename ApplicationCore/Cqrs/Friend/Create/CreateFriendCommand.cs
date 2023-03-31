@@ -2,7 +2,7 @@
 using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 
 namespace ApplicationCore.Cqrs.Friend.Create;

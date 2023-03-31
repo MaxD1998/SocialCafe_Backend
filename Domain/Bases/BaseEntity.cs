@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Base;
+namespace Domain.Bases;
 
 public abstract class BaseEntity
 {
