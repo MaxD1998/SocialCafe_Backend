@@ -16,5 +16,5 @@ internal class GetConversationByIdQueryHandler : BaseRequestHandler<GetConversat
     }
 
     public override async Task<ConversationDto> Handle(GetConversationByIdQuery request, CancellationToken cancellationToken)
-        => await GetElementAsync<ConversationEntity, ConversationDto>(x => x.Id.Equals(request.Id));
+        => await GetElementAsync<ConversationEntity, ConversationDto>(x => x.Id == request.Id);
 }

@@ -16,5 +16,5 @@ internal class GetPostByIdQueryHandler : BaseRequestHandler<GetPostByIdQuery, Po
     }
 
     public override async Task<PostDto> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
-        => await GetElementAsync<PostEntity, PostDto>(x => x.UserId.Equals(request.Id));
+        => await GetElementAsync<PostEntity, PostDto>(x => x.UserId == request.Id);
 }

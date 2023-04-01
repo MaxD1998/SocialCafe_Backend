@@ -16,5 +16,5 @@ internal class GetMessagesByConversationIdQueryHandler : BaseRequestHandler<GetM
     }
 
     public override async Task<IEnumerable<MessageDto>> Handle(GetMessagesByConversationIdQuery request, CancellationToken cancellationToken)
-        => await GetElementsAsync<MessageEntity, MessageDto>(x => x.ConversationId.Equals(request.ConversationId));
+        => await GetElementsAsync<MessageEntity, MessageDto>(x => x.ConversationId == request.ConversationId);
 }

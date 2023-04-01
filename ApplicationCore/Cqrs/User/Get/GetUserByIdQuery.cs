@@ -16,5 +16,5 @@ internal class GetUserByIdQueryHandler : BaseRequestHandler<GetUserByIdQuery, Us
     }
 
     public override async Task<UserDto> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
-        => await GetElementAsync<UserEntity, UserDto>(x => x.Id.Equals(request.Id));
+        => await GetElementAsync<UserEntity, UserDto>(x => x.Id == request.Id);
 }

@@ -16,5 +16,5 @@ internal class GetRefreshTokenByTokenQueryHandle : BaseRequestHandler<GetReferes
     }
 
     public override async Task<RefreshTokenDto> Handle(GetRefereshTokenByTokenQuery request, CancellationToken cancellationToken)
-        => await GetElementAsync<RefreshTokenEntity, RefreshTokenDto>(x => x.Token.Equals(request.Token));
+        => await GetElementAsync<RefreshTokenEntity, RefreshTokenDto>(x => x.Token == request.Token);
 }

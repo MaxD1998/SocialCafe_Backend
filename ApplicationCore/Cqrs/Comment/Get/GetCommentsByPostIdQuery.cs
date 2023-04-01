@@ -16,5 +16,5 @@ internal class GetCommentsByPostIdQueryHandler : BaseRequestHandler<GetCommentsB
     }
 
     public override async Task<IEnumerable<CommentDto>> Handle(GetCommentsByPostIdQuery request, CancellationToken cancellationToken)
-        => await GetElementsAsync<CommentEntity, CommentDto>(x => x.PostId.Equals(request.PostId));
+        => await GetElementsAsync<CommentEntity, CommentDto>(x => x.PostId == request.PostId);
 }

@@ -18,5 +18,5 @@ internal class GetConverastionMembersByConversationIdCommandHandler
     }
 
     public override async Task<IEnumerable<ConversationMemberDto>> Handle(GetConverastionMembersByConversationIdCommand request, CancellationToken cancellationToken)
-        => await GetElementsAsync<ConversationMemberEntity, ConversationMemberDto>(x => x.ConversationId.Equals(request.ConversationId));
+        => await GetElementsAsync<ConversationMemberEntity, ConversationMemberDto>(x => x.ConversationId == request.ConversationId);
 }

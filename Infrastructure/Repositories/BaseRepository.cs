@@ -21,7 +21,7 @@ public class BaseRepository : BaseRepositoryTool, IBaseRepository
         await context.SaveChangesAsync();
 
         return await context.Set<T>()
-            .FirstOrDefaultAsync(x => x.Id.Equals(result.Entity.Id));
+            .FirstOrDefaultAsync(x => x.Id == result.Entity.Id);
     }
 
     public async Task<IEnumerable<T>> CreateRangeAsync<T>(IEnumerable<T> entities) where T : BaseEntity
@@ -119,7 +119,7 @@ public class BaseRepository : BaseRepositoryTool, IBaseRepository
     public async Task<T> UpdateAsync<T>(Guid id, T entity) where T : BaseEntity
     {
         using var context = new DataContext();
-        var query = GetQuery<T>(context, x => x.Id.Equals(id), true);
+        var query = GetQuery<T>(context, x => x.Id == id, true);
         var result = await query
             .FirstOrDefaultAsync();
 
@@ -144,7 +144,7 @@ public class BaseRepository : BaseRepositoryTool, IBaseRepository
 
         foreach (var result in results)
         {
-            var entity = entities.FirstOrDefault(x => x.Id.Equals(result.Id));
+            var entity = entities.FirstOrDefault(x => x.Id == result.Id);
             Map(entity, result);
         }
 

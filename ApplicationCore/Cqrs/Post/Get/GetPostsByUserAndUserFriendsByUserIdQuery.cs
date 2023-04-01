@@ -16,5 +16,5 @@ internal class GetPostsByUserAndUserFriendsByUserIdQueryHandler : BaseRequestHan
     }
 
     public override async Task<IEnumerable<PostDto>> Handle(GetPostsByUserAndUserFriendsByUserIdQuery request, CancellationToken cancellationToken)
-        => await GetElementsAsync<PostEntity, PostDto>(x => x.UserId.Equals(request.UserId));
+        => await GetElementsAsync<PostEntity, PostDto>(x => x.UserId == request.UserId);
 }
