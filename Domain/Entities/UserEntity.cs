@@ -30,6 +30,10 @@ public class UserEntity : BaseEntity
 
     public ICollection<MessageEntity> Messages { get; set; }
 
+    public ICollection<NotificationEntity> Notifications { get; set; }
+
+    public ICollection<NotificationEntity> NotificationsRecipient { get; set; }
+
     public ICollection<PostEntity> Posts { get; set; }
 
     public RefreshTokenEntity RefreshToken { get; set; }

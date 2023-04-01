@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Bases;
 
@@ -9,7 +8,6 @@ public abstract class BaseEntity
     public DateTime CreateTime { get; set; }
 
     [Column(Order = 0)]
-    [Key]
     public Guid Id { get; private init; }
 
     [Column(Order = 2)]

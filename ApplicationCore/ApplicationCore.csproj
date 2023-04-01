@@ -38,4 +38,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Cqrs\Notification\Create\" />
+    <Folder Include="Cqrs\Notification\Delete\" />
+    <Folder Include="Cqrs\Notification\Update\" />
+  </ItemGroup>
+
 </Project>
