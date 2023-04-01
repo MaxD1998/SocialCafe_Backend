@@ -9,9 +9,9 @@ namespace ApplicationCore.Cqrs.Notification.Get;
 
 public record GetNotificationsByRecipientIdQuery(Guid RecipientId) : IRequest<IEnumerable<NotificationDto>>;
 
-internal class GetNotificationsByRecipientIdQueryRequest : BaseRequestHandler<GetNotificationsByRecipientIdQuery, IEnumerable<NotificationDto>>
+internal class GetNotificationsByRecipientIdQueryHandler : BaseRequestHandler<GetNotificationsByRecipientIdQuery, IEnumerable<NotificationDto>>
 {
-    public GetNotificationsByRecipientIdQueryRequest(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
+    public GetNotificationsByRecipientIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
