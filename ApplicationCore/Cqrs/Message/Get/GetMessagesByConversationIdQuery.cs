@@ -9,12 +9,12 @@ namespace ApplicationCore.Cqrs.Message.Get;
 
 public record GetMessagesByConversationIdQuery(Guid ConversationId) : IRequest<IEnumerable<MessageDto>>;
 
-internal class GetMessagesByConversationIdQueryHandler : BaseRequestHandler, IRequestHandler<GetMessagesByConversationIdQuery, IEnumerable<MessageDto>>
+internal class GetMessagesByConversationIdQueryHandler : BaseRequestHandler<GetMessagesByConversationIdQuery, IEnumerable<MessageDto>>
 {
     public GetMessagesByConversationIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public async Task<IEnumerable<MessageDto>> Handle(GetMessagesByConversationIdQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<MessageDto>> Handle(GetMessagesByConversationIdQuery request, CancellationToken cancellationToken)
         => await GetElementsAsync<MessageEntity, MessageDto>(x => x.ConversationId.Equals(request.ConversationId));
 }

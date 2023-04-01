@@ -1,11 +1,13 @@
 ﻿using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
 using Domain.Bases;
+using MediatR;
 using System.Linq.Expressions;
 
 namespace ApplicationCore.Bases;
 
-public abstract class BaseRequestHandler
+public abstract class BaseRequestHandler<TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
+    where TRequest : IRequest<TResponse>
 {
     protected readonly IMapper _mapper;
     protected readonly IUnitOfWork _unitOfWork;
@@ -15,6 +17,8 @@ public abstract class BaseRequestHandler
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
+
+    public abstract Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
 
     protected async Task<TResult> CreateAsync<TEntity, TResult>(object model) where TEntity : BaseEntity
     {

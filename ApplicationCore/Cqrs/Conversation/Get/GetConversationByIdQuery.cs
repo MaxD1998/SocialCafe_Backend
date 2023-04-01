@@ -9,12 +9,12 @@ namespace ApplicationCore.Cqrs.Conversation.Get;
 
 public record GetConversationByIdQuery(Guid Id) : IRequest<ConversationDto>;
 
-internal class GetConversationByIdQueryHandler : BaseRequestHandler, IRequestHandler<GetConversationByIdQuery, ConversationDto>
+internal class GetConversationByIdQueryHandler : BaseRequestHandler<GetConversationByIdQuery, ConversationDto>
 {
     public GetConversationByIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public async Task<ConversationDto> Handle(GetConversationByIdQuery request, CancellationToken cancellationToken)
+    public override async Task<ConversationDto> Handle(GetConversationByIdQuery request, CancellationToken cancellationToken)
         => await GetElementAsync<ConversationEntity, ConversationDto>(x => x.Id.Equals(request.Id));
 }

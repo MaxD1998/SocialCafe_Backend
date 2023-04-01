@@ -9,12 +9,12 @@ namespace ApplicationCore.Cqrs.RefreshToken.Get;
 
 public record GetRefreshTokenByUserIdQuery(Guid UserId) : IRequest<RefreshTokenDto>;
 
-internal class GetRefreshTokenByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetRefreshTokenByUserIdQuery, RefreshTokenDto>
+internal class GetRefreshTokenByUserIdQueryHandler : BaseRequestHandler<GetRefreshTokenByUserIdQuery, RefreshTokenDto>
 {
     public GetRefreshTokenByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public Task<RefreshTokenDto> Handle(GetRefreshTokenByUserIdQuery request, CancellationToken cancellationToken)
-        => GetElementAsync<RefreshTokenEntity, RefreshTokenDto>(x => x.UserId.Equals(request.UserId), true);
+    public override async Task<RefreshTokenDto> Handle(GetRefreshTokenByUserIdQuery request, CancellationToken cancellationToken)
+        => await GetElementAsync<RefreshTokenEntity, RefreshTokenDto>(x => x.UserId.Equals(request.UserId), true);
 }

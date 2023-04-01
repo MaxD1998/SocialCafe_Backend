@@ -9,12 +9,12 @@ namespace ApplicationCore.Cqrs.Comment.Get;
 
 public record GetCommentsByPostIdQuery(Guid PostId) : IRequest<IEnumerable<CommentDto>>;
 
-internal class GetCommentsByPostIdQueryHandler : BaseRequestHandler, IRequestHandler<GetCommentsByPostIdQuery, IEnumerable<CommentDto>>
+internal class GetCommentsByPostIdQueryHandler : BaseRequestHandler<GetCommentsByPostIdQuery, IEnumerable<CommentDto>>
 {
     public GetCommentsByPostIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public async Task<IEnumerable<CommentDto>> Handle(GetCommentsByPostIdQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<CommentDto>> Handle(GetCommentsByPostIdQuery request, CancellationToken cancellationToken)
         => await GetElementsAsync<CommentEntity, CommentDto>(x => x.PostId.Equals(request.PostId));
 }
