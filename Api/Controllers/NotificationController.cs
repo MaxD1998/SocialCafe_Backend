@@ -18,7 +18,7 @@ public class NotificationController : BaseApiController
     public async Task<ActionResult<bool>> DeleteAsync([FromRoute] Guid id)
         => await ApiResponseAsync<bool, DeleteNotificationCommand>(new(id));
 
-    [HttpGet("{recipientId}")]
+    [HttpGet("RecipientId/{recipientId}")]
     public async Task<ActionResult<IEnumerable<NotificationDto>>> GetsByRecipientIdAsync([FromRoute] Guid recipientId)
         => await ApiResponseAsync<IEnumerable<NotificationDto>, GetNotificationsByRecipientIdQuery>(new(recipientId));
 
