@@ -4,7 +4,7 @@ using ApplicationCore.Dtos.User;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
@@ -12,7 +12,7 @@ namespace ApplicationCore.Cqrs.User.Get;
 
 public record GetUsersByNamesExceptUserFriendsQuery(string FirstName, string LastName) : IRequest<IEnumerable<UserDto>>;
 
-internal class GetUsersByNamesExceptUserFriendsQueryHandler : BaseRequestHandler, IRequestHandler<GetUsersByNamesExceptUserFriendsQuery, IEnumerable<UserDto>>
+internal class GetUsersByNamesExceptUserFriendsQueryHandler : BaseRequestHandler<GetUsersByNamesExceptUserFriendsQuery, IEnumerable<UserDto>>
 {
     private readonly Guid _userId;
 
@@ -24,7 +24,7 @@ internal class GetUsersByNamesExceptUserFriendsQueryHandler : BaseRequestHandler
         _userId = httpContextAccessor.HttpContext.User.GetUserId();
     }
 
-    public async Task<IEnumerable<UserDto>> Handle(GetUsersByNamesExceptUserFriendsQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<UserDto>> Handle(GetUsersByNamesExceptUserFriendsQuery request, CancellationToken cancellationToken)
     {
         var friends = await GetElementsAsync<FriendEntity, FriendDto>(x => x.InviterId == _userId || x.RecipientId == _userId, true);
         var ids = friends.Select(x => x.UserId);

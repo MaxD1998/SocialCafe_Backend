@@ -2,20 +2,20 @@
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 
 namespace ApplicationCore.Cqrs.Post.Get;
 
 public record GetPostsByUserIdQuery(Guid UserId) : IRequest<IEnumerable<PostDto>>;
 
-internal class GetPostsByUserIdQueryHandler : BaseRequestHandler, IRequestHandler<GetPostsByUserIdQuery, IEnumerable<PostDto>>
+internal class GetPostsByUserIdQueryHandler : BaseRequestHandler<GetPostsByUserIdQuery, IEnumerable<PostDto>>
 {
     public GetPostsByUserIdQueryHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public async Task<IEnumerable<PostDto>> Handle(GetPostsByUserIdQuery request, CancellationToken cancellationToken)
+    public override async Task<IEnumerable<PostDto>> Handle(GetPostsByUserIdQuery request, CancellationToken cancellationToken)
     {
         var ids = await GetElementsAsync<FriendEntity, Guid>(
             x => x.InviterId == request.UserId || x.RecipientId == request.UserId,

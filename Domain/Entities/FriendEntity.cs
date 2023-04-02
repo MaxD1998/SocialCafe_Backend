@@ -1,6 +1,6 @@
-﻿using Domain.Base;
+﻿using Domain.Bases;
 
-namespace Domain.Entity;
+namespace Domain.Entities;
 
 public class FriendEntity : BaseEntity
 {

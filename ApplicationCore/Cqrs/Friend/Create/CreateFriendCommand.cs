@@ -2,19 +2,19 @@
 using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Interfaces.Repositories;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using MediatR;
 
 namespace ApplicationCore.Cqrs.Friend.Create;
 
 public record CreateFriendCommand(FriendInputDto Dto) : IRequest<FriendDto>;
 
-internal class CreateFriendCommandHandler : BaseRequestHandler, IRequestHandler<CreateFriendCommand, FriendDto>
+internal class CreateFriendCommandHandler : BaseRequestHandler<CreateFriendCommand, FriendDto>
 {
     public CreateFriendCommandHandler(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork)
     {
     }
 
-    public async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
+    public override async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
         => await CreateAsync<FriendEntity, FriendDto>(request.Dto);
 }

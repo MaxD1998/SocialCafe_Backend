@@ -40,7 +40,6 @@ service.AddJwtAuthentication(settings);
 service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
-service.AddScoped<IChatService, ChatService>();
 service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 service.AddScoped<IUnitOfWork, UnitOfWork>();

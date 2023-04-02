@@ -2,14 +2,16 @@
 using ApplicationCore.Dtos.Conversation;
 using ApplicationCore.Dtos.ConversationMember;
 using ApplicationCore.Dtos.Friend;
+using ApplicationCore.Dtos.Hub;
 using ApplicationCore.Dtos.Login;
 using ApplicationCore.Dtos.Message;
+using ApplicationCore.Dtos.Notification;
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Dtos.RefreshToken;
 using ApplicationCore.Dtos.User;
 using ApplicationCore.Extensions;
 using AutoMapper;
-using Domain.Entity;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace ApplicationCore.Mappings;
@@ -29,7 +31,9 @@ public class MapProfile : Profile
         CreateMap<FriendEntity, FriendDto>()
             .ForMember(x => x.UserId, map => map.MapFrom(x => x.InviterId != _userId ? x.InviterId : x.RecipientId))
             .ForMember(x => x.User, map => map.MapFrom(x => x.InviterId != _userId ? x.Inviter : x.Recipient));
+        CreateMap<HubEntity, HubDto>();
         CreateMap<MessageEntity, MessageDto>();
+        CreateMap<NotificationEntity, NotificationDto>();
         CreateMap<PostEntity, PostDto>();
         CreateMap<RefreshTokenEntity, RefreshTokenDto>();
         CreateMap<UserEntity, UserDto>();
@@ -39,7 +43,9 @@ public class MapProfile : Profile
         CreateMap<ConversationInputDto, ConversationEntity>();
         CreateMap<ConversationMemberInputDto, ConversationMemberEntity>();
         CreateMap<FriendInputDto, FriendEntity>();
+        CreateMap<HubInputDto, HubEntity>();
         CreateMap<MessageInputDto, MessageEntity>();
+        CreateMap<NotificationInputDto, NotificationEntity>();
         CreateMap<PostInputDto, PostEntity>();
         CreateMap<RefreshTokenInputDto, RefreshTokenEntity>();
         CreateMap<UserInputDto, UserEntity>();

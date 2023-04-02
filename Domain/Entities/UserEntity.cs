@@ -1,13 +1,10 @@
-﻿using Domain.Base;
+﻿using Domain.Bases;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entity;
+namespace Domain.Entities;
 
 public class UserEntity : BaseEntity
 {
-    [Column(Order = 7)]
-    public string ConnectionId { get; set; }
-
     [Column(Order = 3)]
     public string Email { get; set; }
 
@@ -24,11 +21,17 @@ public class UserEntity : BaseEntity
 
     public ICollection<CommentEntity> Comments { get; set; }
 
+    public ICollection<HubEntity> Hubs { get; set; }
+
     public ICollection<FriendEntity> InvitedByUsers { get; set; }
 
     public ICollection<FriendEntity> InvitedUsers { get; set; }
 
     public ICollection<MessageEntity> Messages { get; set; }
+
+    public ICollection<NotificationEntity> Notifications { get; set; }
+
+    public ICollection<NotificationEntity> NotificationsRecipient { get; set; }
 
     public ICollection<PostEntity> Posts { get; set; }
 

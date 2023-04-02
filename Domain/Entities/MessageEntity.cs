@@ -1,21 +1,22 @@
-﻿using Domain.Base;
+﻿using Domain.Bases;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Entity;
+namespace Domain.Entities;
 
-public class ConversationMemberEntity : BaseEntity
+public class MessageEntity : BaseEntity
 {
     [Column(Order = 3)]
     public Guid ConversationId { get; set; }
 
-    public string Nick { get; set; }
+    [Column(Order = 5)]
+    public string Text { get; set; }
 
     [Column(Order = 4)]
     public Guid UserId { get; set; }
 
     #region Related data
 
-    public ConversationEntity Conversation { get; set; }
+    public ConversationEntity Converstaion { get; set; }
 
     public UserEntity User { get; set; }
 
