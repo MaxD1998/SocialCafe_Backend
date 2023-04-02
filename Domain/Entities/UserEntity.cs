@@ -5,9 +5,6 @@ namespace Domain.Entities;
 
 public class UserEntity : BaseEntity
 {
-    [Column(Order = 7)]
-    public string ConnectionId { get; set; }
-
     [Column(Order = 3)]
     public string Email { get; set; }
 
@@ -23,6 +20,8 @@ public class UserEntity : BaseEntity
     #region Related data
 
     public ICollection<CommentEntity> Comments { get; set; }
+
+    public ICollection<HubEntity> Hubs { get; set; }
 
     public ICollection<FriendEntity> InvitedByUsers { get; set; }
 

@@ -1,5 +1,11 @@
+using ApplicationCore.Cqrs.Hub.Create;
+using ApplicationCore.Cqrs.Hub.Delete;
+using ApplicationCore.Cqrs.Hub.Get;
+using ApplicationCore.Dtos.Hub;
 using ApplicationCore.Extensions;
-using ApplicationCore.Interfaces;
+using AutoMapper;
+using Domain.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
@@ -8,32 +14,46 @@ namespace Api.Bases;
 [Authorize]
 public abstract class BaseHub : Hub
 {
-    protected readonly IChatService _messageService;
+    protected readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public BaseHub(IChatService messageService)
+    public BaseHub(IMapper mapper, IMediator mediator)
     {
-        _messageService = messageService;
+        _mapper = mapper;
+        _mediator = mediator;
     }
+
+    protected abstract HubType Type { get; }
 
     protected Guid UserId => Context.GetHttpContext().User.GetUserId();
 
     public override async Task OnConnectedAsync()
     {
         var connectionId = Context.ConnectionId;
+        var dto = new HubInputDto()
+        {
+            ConnectionId = connectionId,
+            Type = Type,
+            UserId = UserId
+        };
 
-        await _messageService.UpdateUserConnectionId(UserId, connectionId);
-
-        var connectionIds = await _messageService.GetConnectionIds(UserId);
-
-        Clients.Clients(connectionIds);
+        await _mediator.Send(new CreateHubCommand(dto));
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
+        => await _mediator.Send(new DeleteHubByUserIdAndTypeCommand(UserId, Type));
+
+    protected async Task Send<T>(Guid userId, string method, T result)
     {
-        await _messageService.UpdateUserConnectionId(UserId, null);
+        var userIds = new[] { userId };
+        await Send(userIds, method, result);
+    }
 
-        var connectionIds = await _messageService.GetConnectionIds(UserId);
+    protected async Task Send<T>(IEnumerable<Guid> userIds, string method, T result)
+    {
+        var hubs = await _mediator.Send(new GetHubsByUserIdsAndTypeQuery(userIds, Type));
+        var connectionIds = hubs.Select(x => x.ConnectionId);
 
-        Clients.Clients(connectionIds);
+        await Clients.Clients(connectionIds).SendAsync(method, result);
     }
 }
