@@ -74,6 +74,12 @@ app.MapHub<SocialChatHub>("/SocialChat", opt =>
 {
     opt.Transports = HttpTransportType.WebSockets;
 });
+
+app.MapHub<NotificationHub>("/Notification", opt =>
+{
+    opt.Transports = HttpTransportType.WebSockets;
+});
+
 app.MapControllers();
 
 var scope = app.Services.CreateScope();
