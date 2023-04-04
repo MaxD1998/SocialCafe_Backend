@@ -22,6 +22,6 @@ public class SocialChatHub : BaseHub
         var conversationMembers = await _mediator.Send(new GetConverastionMembersByConversationIdCommand(result.ConversationId));
         var userIds = conversationMembers.Select(x => x.UserId);
 
-        await Send(userIds, "RecieveMessageHandler", result);
+        await Send(userIds, "GetMessage", result);
     }
 }
