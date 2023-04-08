@@ -1,4 +1,4 @@
-using ApplicationCore.Cqrs.Hub.Create;
+using ApplicationCore.Cqrs.Hub.CreateUpdate;
 using ApplicationCore.Cqrs.Hub.Delete;
 using ApplicationCore.Cqrs.Hub.Get;
 using ApplicationCore.Dtos.Hub;
@@ -37,7 +37,7 @@ public abstract class BaseHub : Hub
             UserId = UserId
         };
 
-        await _mediator.Send(new CreateHubCommand(dto));
+        await _mediator.Send(new CreateUpdateHubCommand(dto));
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
