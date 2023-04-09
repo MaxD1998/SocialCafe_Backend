@@ -8,6 +8,9 @@ public class NotificationConfig : BaseConfig<NotificationEntity>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<NotificationEntity> builder)
     {
+        builder.HasIndex(x => new { x.UserId, x.Type, x.RecipientId })
+            .IsUnique();
+
         builder.HasOne(x => x.Recipient)
             .WithMany(x => x.NotificationsRecipient)
             .HasForeignKey(x => x.RecipientId);

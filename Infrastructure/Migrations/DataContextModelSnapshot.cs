@@ -255,7 +255,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Type", "RecipientId")
+                        .IsUnique();
 
                     b.ToTable("Notification", (string)null);
                 });
