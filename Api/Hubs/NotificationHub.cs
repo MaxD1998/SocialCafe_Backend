@@ -19,6 +19,6 @@ public class NotificationHub : BaseHub
     {
         var result = await _mediator.Send(new CreateNotificationCommand(dto));
 
-        await Send(result.UserId, "GetNotification", result);
+        await Send(result.RecipientId, "GetNotification", result);
     }
 }
