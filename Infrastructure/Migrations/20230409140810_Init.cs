@@ -307,9 +307,10 @@ namespace Infrastructure.Migrations
                 column: "RecipientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_UserId",
+                name: "IX_Notification_UserId_Type_RecipientId",
                 table: "Notification",
-                column: "UserId");
+                columns: new[] { "UserId", "Type", "RecipientId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_UserId",

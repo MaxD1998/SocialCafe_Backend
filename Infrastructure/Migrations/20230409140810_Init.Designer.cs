@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230402161723_Init")]
+    [Migration("20230409140810_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -258,7 +258,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("RecipientId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "Type", "RecipientId")
+                        .IsUnique();
 
                     b.ToTable("Notification", (string)null);
                 });
