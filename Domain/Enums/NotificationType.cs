@@ -2,5 +2,5 @@
 
 public enum NotificationType
 {
-    FriendInvitation,
+    FriendInvitation = 0,
 }

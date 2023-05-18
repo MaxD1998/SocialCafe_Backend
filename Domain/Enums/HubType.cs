@@ -2,6 +2,6 @@
 
 public enum HubType
 {
-    SocialCafe,
-    Notification
+    SocialCafe = 0,
+    Notification = 1,
 }

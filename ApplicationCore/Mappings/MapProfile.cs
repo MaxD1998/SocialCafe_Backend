@@ -36,6 +36,7 @@ public class MapProfile : Profile
         CreateMap<NotificationEntity, NotificationDto>();
         CreateMap<PostEntity, PostDto>();
         CreateMap<RefreshTokenEntity, RefreshTokenDto>();
+        CreateMap<UserEntity, InviteUserDto>();
         CreateMap<UserEntity, UserDto>();
 
         //Dto to Entity
