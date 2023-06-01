@@ -16,5 +16,14 @@ internal class GetPostsByUserAndUserFriendsByUserIdQueryHandler : BaseRequestHan
     }
 
     public override async Task<IEnumerable<PostDto>> Handle(GetPostsByUserAndUserFriendsByUserIdQuery request, CancellationToken cancellationToken)
-        => await GetElementsAsync<PostEntity, PostDto>(x => x.UserId == request.UserId);
+    {
+        var ids = await GetElementsAsync<FriendEntity, Guid>(
+            x => x.InviterId == request.UserId || x.RecipientId == request.UserId,
+            x => x.InviterId != request.UserId ? x.InviterId : x.RecipientId,
+            true);
+
+        ids = ids.Concat(new[] { request.UserId });
+
+        return await GetElementsAsync<PostEntity, PostDto>(x => ids.Contains(x.UserId));
+    }
 }
