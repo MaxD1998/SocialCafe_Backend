@@ -16,14 +16,5 @@ internal class GetPostsByUserIdQueryHandler : BaseRequestHandler<GetPostsByUserI
     }
 
     public override async Task<IEnumerable<PostDto>> Handle(GetPostsByUserIdQuery request, CancellationToken cancellationToken)
-    {
-        var ids = await GetElementsAsync<FriendEntity, Guid>(
-            x => x.InviterId == request.UserId || x.RecipientId == request.UserId,
-            x => x.InviterId != request.UserId ? x.InviterId : x.RecipientId,
-            true);
-
-        ids.Concat(new[] { request.UserId });
-
-        return await GetElementsAsync<PostEntity, PostDto>(x => ids.Contains(x.UserId));
-    }
+        => await GetElementsAsync<PostEntity, PostDto>(x => x.UserId == request.UserId);
 }

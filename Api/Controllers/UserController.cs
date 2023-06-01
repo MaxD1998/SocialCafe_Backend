@@ -21,6 +21,10 @@ public class UserController : BaseApiController
     public async Task<ActionResult<UserDto>> GetByEmailAsync([FromQuery] string email)
         => await ApiResponseAsync<UserDto, GetUserByEmailQuery>(new(email));
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserDto>> GetByIdAsync(Guid id)
+        => await ApiResponseAsync<UserDto, GetUserByIdQuery>(new(id));
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetsAsync()
         => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersQuery>(new());

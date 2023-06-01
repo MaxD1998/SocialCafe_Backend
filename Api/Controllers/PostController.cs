@@ -17,9 +17,9 @@ public class PostController : BaseApiController
     public async Task<ActionResult<PostDto>> CreateAsync([FromBody] PostInputDto dto)
         => await ApiResponseAsync<PostDto, CreatePostCommand>(new(dto));
 
-    [HttpGet("{postId}")]
-    public async Task<ActionResult<PostDto>> GetByIdAsync([FromRoute] Guid postId)
-        => await ApiResponseAsync<PostDto, GetPostByIdQuery>(new(postId));
+    [HttpGet("{id}")]
+    public async Task<ActionResult<PostDto>> GetByIdAsync([FromRoute] Guid id)
+        => await ApiResponseAsync<PostDto, GetPostByIdQuery>(new(id));
 
     [HttpGet("UserAndUserFriends/UserId/{userId}")]
     public async Task<ActionResult<IEnumerable<PostDto>>> GetsByUserAndUserFriendsByUserIdAsync([FromRoute] Guid userId)

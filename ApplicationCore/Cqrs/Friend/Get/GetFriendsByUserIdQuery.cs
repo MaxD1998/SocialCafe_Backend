@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Bases;
 using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Interfaces.Repositories;
+using ApplicationCore.Mappings.CustomMaps;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -16,5 +17,8 @@ internal class GetFriendsByUserIdQueryHandler : BaseRequestHandler<GetFriendsByU
     }
 
     public override async Task<IEnumerable<FriendDto>> Handle(GetFriendsByUserIdQuery request, CancellationToken cancellationToken)
-        => await GetElementsAsync<FriendEntity, FriendDto>(x => x.InviterId == request.UserId || x.RecipientId == request.UserId);
+    {
+        Mapper = FriendMapProfile.Extend(request.UserId);
+        return await GetElementsAsync<FriendEntity, FriendDto>(x => x.InviterId == request.UserId || x.RecipientId == request.UserId);
+    }
 }

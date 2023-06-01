@@ -34,7 +34,6 @@ service.AddValidatorsFromAssembly(typeof(ApplicationCoreAssembly).Assembly);
 service.AddDbContext<DataContext>();
 service.AddMediatR(typeof(ApplicationCoreAssembly).Assembly);
 service.AddAutoMapper(typeof(ApplicationCoreAssembly).Assembly);
-service.AddAutoMapperProfiles();
 service.AddJwtAuthentication(settings);
 
 service.AddScoped<ErrorHandlingMiddleware>();
@@ -46,17 +45,10 @@ service.AddScoped<IUnitOfWork, UnitOfWork>();
 
 service.AddSignalR();
 service.AddEndpointsApiExplorer();
-service.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 app.UseRouting();

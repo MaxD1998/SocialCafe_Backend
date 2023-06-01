@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Bases;
 using ApplicationCore.Dtos.Friend;
 using ApplicationCore.Interfaces.Repositories;
+using ApplicationCore.Mappings.CustomMaps;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -16,5 +17,8 @@ internal class CreateFriendCommandHandler : BaseRequestHandler<CreateFriendComma
     }
 
     public override async Task<FriendDto> Handle(CreateFriendCommand request, CancellationToken cancellationToken)
-        => await CreateAsync<FriendEntity, FriendDto>(request.Dto);
+    {
+        Mapper = FriendMapProfile.Extend(request.Dto.InviterId);
+        return await CreateAsync<FriendEntity, FriendDto>(request.Dto);
+    }
 }
