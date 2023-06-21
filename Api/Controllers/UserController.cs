@@ -1,6 +1,7 @@
 ﻿using Api.Bases;
 using ApplicationCore.Cqrs.User.Delete;
 using ApplicationCore.Cqrs.User.Get;
+using ApplicationCore.Cqrs.User.Update;
 using ApplicationCore.Dtos.User;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -32,4 +33,8 @@ public class UserController : BaseApiController
     [HttpGet("NamesExceptUserFriends")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetsByNamesExceptUserFriendsAsync([FromQuery] string firstName, [FromQuery] string lastName)
         => await ApiResponseAsync<IEnumerable<UserDto>, GetUsersByNamesExceptUserFriendsQuery>(new(firstName ?? string.Empty, lastName ?? string.Empty));
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<UserDto>> UpdateAsync([FromRoute] Guid id, [FromBody] UserInputDto dto)
+        => await ApiResponseAsync<UserDto, UpdateUserCommand>(new(id, dto));
 }
