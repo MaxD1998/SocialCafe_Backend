@@ -10,7 +10,6 @@ using ApplicationCore.Resources;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
@@ -21,21 +20,18 @@ public class AuthorizationController : BaseApiController
     private readonly IAuthenticationService _authorizationService;
     private readonly ICookieService _cookieService;
     private readonly IMapper _mapper;
-    private readonly IPasswordHasher<UserDto> _passwordHasher;
     private readonly ISettings _settings;
 
     public AuthorizationController(
         IAuthenticationService authorizationService,
         ICookieService cookieService,
         IMapper mapper,
-        IPasswordHasher<UserDto> passwordHasher,
         ISettings settings,
         IMediator mediator) : base(mediator)
     {
         _authorizationService = authorizationService;
         _cookieService = cookieService;
         _mapper = mapper;
-        _passwordHasher = passwordHasher;
         _settings = settings;
     }
 
@@ -73,10 +69,7 @@ public class AuthorizationController : BaseApiController
     [HttpPost("Register")]
     public async Task<ActionResult<AuthorizeDto>> RegisterAsync([FromBody] RegisterDto registerDto)
     {
-        var dto = _mapper.Map<UserDto>(registerDto);
-
-        dto.HashedPassword = _passwordHasher.HashPassword(dto, registerDto.Password);
-
+        var dto = _mapper.Map<UserInputDto>(registerDto);
         var user = await _mediator.Send(new CreateUserCommand(dto));
         var result = await _authorizationService.GetAuthorizationAsync(user, registerDto.Password);
         var expireDays = _settings.GetRefreshTokenExpireDays();

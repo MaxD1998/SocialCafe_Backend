@@ -12,4 +12,6 @@ public class UserInputDto
     public string HashedPassword { get; set; }
 
     public string LastName { get; set; }
+
+    public string Password { get; set; }
 }

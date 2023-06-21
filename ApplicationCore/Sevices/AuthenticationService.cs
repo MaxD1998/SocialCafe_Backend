@@ -18,12 +18,12 @@ namespace ApplicationCore.Sevices;
 public class AuthenticationService : IAuthenticationService
 {
     private readonly IMediator _mediator;
-    private readonly IPasswordHasher<UserDto> _passwordHasher;
+    private readonly IPasswordHasher<UserInputDto> _passwordHasher;
     private readonly ISettings _settings;
     private readonly ITokenGeneratorService _tokenGeneratorService;
 
     public AuthenticationService(IMediator mediator,
-        IPasswordHasher<UserDto> passwordHasher,
+        IPasswordHasher<UserInputDto> passwordHasher,
         ISettings settings,
         ITokenGeneratorService tokenGeneratorService)
     {

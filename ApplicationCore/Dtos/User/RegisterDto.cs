@@ -2,5 +2,4 @@
 
 public class RegisterDto : UserInputDto
 {
-    public string Password { get; set; }
 }

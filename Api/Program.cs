@@ -39,7 +39,7 @@ service.AddJwtAuthentication(settings);
 service.AddScoped<ErrorHandlingMiddleware>();
 service.AddScoped<IAuthenticationService, AuthenticationService>();
 service.AddScoped<ICookieService, CookieService>();
-service.AddScoped<IPasswordHasher<UserDto>, PasswordHasher<UserDto>>();
+service.AddScoped<IPasswordHasher<UserInputDto>, PasswordHasher<UserInputDto>>();
 service.AddScoped<ITokenGeneratorService, TokenGeneratorService>();
 service.AddScoped<IUnitOfWork, UnitOfWork>();
 
