@@ -9,6 +9,7 @@ using ApplicationCore.Dtos.Notification;
 using ApplicationCore.Dtos.Post;
 using ApplicationCore.Dtos.RefreshToken;
 using ApplicationCore.Dtos.User;
+using ApplicationCore.Dtos.UserPhoto;
 using AutoMapper;
 using Domain.Entities;
 
@@ -29,6 +30,8 @@ public class MapProfile : Profile
         CreateMap<RefreshTokenEntity, RefreshTokenDto>();
         CreateMap<UserEntity, InviteUserDto>();
         CreateMap<UserEntity, UserDto>();
+        CreateMap<UserPhotoEntity, UserPhotoDto>();
+        CreateMap<UserPhotoEntity, UserPhotoListDto>();
 
         //Dto to Entity
         CreateMap<CommentInputDto, CommentEntity>();
@@ -41,6 +44,7 @@ public class MapProfile : Profile
         CreateMap<PostInputDto, PostEntity>();
         CreateMap<RefreshTokenInputDto, RefreshTokenEntity>();
         CreateMap<UserInputDto, UserEntity>();
+        CreateMap<UserPhotoInputDto, UserPhotoEntity>();
 
         //Dto to Dto
         CreateMap<RegisterDto, UserInputDto>();

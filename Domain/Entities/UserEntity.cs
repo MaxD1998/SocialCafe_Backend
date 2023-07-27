@@ -37,5 +37,7 @@ public class UserEntity : BaseEntity
 
     public RefreshTokenEntity RefreshToken { get; set; }
 
+    public ICollection<UserPhotoEntity> UserPhotos { get; set; }
+
     #endregion Related data
 }

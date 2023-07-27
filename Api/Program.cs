@@ -56,7 +56,7 @@ app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
     .AllowCredentials()
-    .WithOrigins("http://localhost:4200"));
+    .WithOrigins("http://localhost:4200/"));
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthentication();
